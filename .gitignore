@@ -1,0 +1,14 @@
+# Dependências (caso use npm no futuro)
+node_modules/
+
+# Companion visual do brainstorming (efêmero)
+.superpowers/
+docs/superpowers/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/*
+!.vscode/settings.json
