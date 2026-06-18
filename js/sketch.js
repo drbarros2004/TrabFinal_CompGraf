@@ -33,6 +33,9 @@ function draw() {
   // 4. Menu radial
   menu.draw();
 
+  // 4.5. Botão de alternância de view
+  ToggleButton.draw();
+
   // 5. HUD / dicas
   _drawHUD();
 }
@@ -48,6 +51,7 @@ function keyPressed() {
 
 function mousePressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
+  ToggleButton.handleClick(mouseX, mouseY); // troca de view se clicar no botão
 }
 
 // ─── Helpers de render ───────────────────────────────────────────────────────
