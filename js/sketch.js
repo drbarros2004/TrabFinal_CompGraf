@@ -18,8 +18,8 @@ function draw() {
   // 1. Detectar strums (atualiza física + dispara áudio)
   Strummer.update(strings, menu.getActiveChord());
 
-  // 2. Desenhar braço (linhas laterais sutis)
-  _drawNeck();
+  // 2. Desenhar o cenário da view ativa (braço simples OU violão inteiro)
+  activeView.drawBackground();
 
   // 3. Desenhar cada corda
   for (const s of strings) {
@@ -92,28 +92,28 @@ function _drawFingering() {
   push();
   for (let i = 0; i < 6; i++) {
     const f = frets[i];
-    const y = stringY(i);
+    const y = activeView.stringY(i);
 
     if (f === -1) {
-      // Corda abafada: × à esquerda do nut
+      // Corda abafada: × à esquerda da pestana
       noStroke();
       fill(...COLORS.hint);
       textAlign(CENTER, CENTER);
       textSize(13);
-      text("×", NECK.xStart - 25, y);
+      text("×", activeView.nutX - 25, y);
 
     } else if (f === 0) {
-      // Corda solta: círculo vazio à esquerda do nut
+      // Corda solta: círculo vazio à esquerda da pestana
       noFill();
       stroke(...COLORS.menuText);
       strokeWeight(1.5);
-      ellipse(NECK.xStart - 25, y, 9, 9);
+      ellipse(activeView.nutX - 25, y, 9, 9);
 
     } else {
       // Corda pressionada: ponto laranja no centro do traste
       noStroke();
       fill(...COLORS.menuActive);
-      ellipse(fretX(f - 0.5), y, 14, 14);
+      ellipse(activeView.fretX(f - 0.5), y, 14, 14);
     }
   }
   pop();
