@@ -26,6 +26,7 @@ const GuitarView = {
     g.addColorStop(0,   "#d9a25e");
     g.addColorStop(0.5, "#c98a44");
     g.addColorStop(1,   "#a96e2f");
+    fill(255); // garante _doFill=true; o fillStyle abaixo sobrepõe a cor pelo gradiente
     drawingContext.fillStyle = g;
     stroke(94, 61, 28);
     strokeWeight(3);
