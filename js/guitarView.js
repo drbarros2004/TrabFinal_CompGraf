@@ -93,10 +93,48 @@ const GuitarView = {
     pop();
   },
 
+  _drawFretboard() {
+    const cy = VIOLAO_GEO.cy, fh = 37;
+    const x0 = VIOLAO_GEO.fbX0, x1 = VIOLAO_GEO.fbX1;
+    push();
+    rectMode(CORNER);
+    // escala (madeira escura) com gradiente próprio
+    const g = drawingContext.createLinearGradient(0, cy - fh, 0, cy + fh);
+    g.addColorStop(0, "#3b2415");
+    g.addColorStop(1, "#24160c");
+    fill(255); // garante _doFill=true; o fillStyle abaixo sobrepõe pela cor do gradiente
+    drawingContext.fillStyle = g;
+    stroke(26, 15, 7);
+    strokeWeight(2);
+    rect(x0, cy - fh, x1 - x0, fh * 2);
+
+    // trastes
+    stroke(202, 167, 102);
+    strokeWeight(2);
+    for (let f = 1; f <= VIOLAO_GEO.numFrets; f++) {
+      const x = activeView.fretX(f);
+      line(x, cy - fh, x, cy + fh);
+    }
+
+    // marcadores de posição (casas 3, 5, 7)
+    noStroke();
+    fill(231, 207, 154, 200);
+    [3, 5, 7].forEach((f) => {
+      ellipse(activeView.fretX(f - 0.5), cy, 8);
+    });
+
+    // pestana (nut)
+    noStroke();
+    fill(232, 221, 200);
+    rect(VIOLAO_GEO.fbX0 - 4, cy - fh - 2, 7, fh * 2 + 4, 2);
+    pop();
+  },
+
   draw() {
+    this._drawFretboard();
     this._drawBody();
     this._drawSoundhole();
     this._drawBridge();
-    // (escala, cabeça entram nas próximas tarefas)
+    // (cabeça entra na próxima tarefa)
   },
 };
