@@ -66,3 +66,13 @@ const STRING_NAMES = ["E", "A", "D", "G", "B", "E"]; // índice 0 = corda 6 (E2)
 function fretX(f) {
   return NECK.xStart + f * (NECK.xEnd - NECK.xStart) / NUM_FRETS;
 }
+
+// ─── Escala de amplitude por view ────────────────────────────────────────────
+// Espaçamento entre cordas do modo braço atual = base de referência (ampScale 1).
+const BRACO_STRING_SPACING = (NECK.yBot - NECK.yTop) / 5; // = 72
+
+// Amplitude visual proporcional ao espaçamento: cordas mais juntas vibram com
+// menor deslocamento, evitando que a onda invada a corda vizinha.
+function ampScaleForSpacing(spacing) {
+  return spacing / BRACO_STRING_SPACING;
+}
