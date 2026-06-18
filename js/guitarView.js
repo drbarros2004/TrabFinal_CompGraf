@@ -49,8 +49,54 @@ const GuitarView = {
     pop();
   },
 
+  _drawSoundhole() {
+    const cx = 855, cy = VIOLAO_GEO.cy, r = 75;
+    push();
+    // anel externo (madeira mais escura)
+    noFill();
+    stroke(122, 90, 48);
+    strokeWeight(9);
+    ellipse(cx, cy, (r + 8) * 2);
+    // buraco escuro
+    noStroke();
+    const g = drawingContext.createRadialGradient(cx, cy, r * 0.55, cx, cy, r);
+    g.addColorStop(0,    "#0d0905");
+    g.addColorStop(0.85, "#1c130a");
+    g.addColorStop(1,    "#3a2614");
+    fill(255); // garante _doFill=true; o fillStyle abaixo sobrepõe pela cor do gradiente
+    drawingContext.fillStyle = g;
+    ellipse(cx, cy, r * 2);
+    // rosácea: anel de pontinhos
+    fill(231, 207, 154, 180);
+    const rr = r + 14;
+    for (let a = 0; a < TWO_PI; a += TWO_PI / 36) {
+      ellipse(cx + rr * cos(a), cy + rr * sin(a), 3.2);
+    }
+    pop();
+  },
+
+  _drawBridge() {
+    const cy = VIOLAO_GEO.cy, bx = 965;
+    push();
+    rectMode(CENTER);
+    // base do cavalete
+    fill(42, 26, 13);
+    stroke(74, 48, 24);
+    strokeWeight(2);
+    rect(bx, cy, 60, 126, 8);
+    // pininhos onde as cordas ancoram
+    noStroke();
+    fill(228, 220, 200);
+    for (let i = 0; i < 6; i++) {
+      ellipse(bx + 8, activeView.stringY(i), 6);
+    }
+    pop();
+  },
+
   draw() {
     this._drawBody();
-    // (escala, boca, cavalete, cabeça entram nas próximas tarefas)
+    this._drawSoundhole();
+    this._drawBridge();
+    // (escala, cabeça entram nas próximas tarefas)
   },
 };
