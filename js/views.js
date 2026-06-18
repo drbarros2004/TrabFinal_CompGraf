@@ -10,6 +10,7 @@ const VIOLAO_GEO = {
   fbX0:     120,            // início da escala (pestana)
   fbX1:     520,            // fim da escala (encontro com o corpo)
   numFrets: 9,
+  fh:       37,             // meia-altura da escala/cabeça
 };
 
 const VIEWS = {

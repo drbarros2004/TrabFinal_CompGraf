@@ -4,9 +4,8 @@ const GuitarView = {
   _bodyShape() {
     const cy = VIOLAO_GEO.cy;
     const bh = 198;  // meia-altura do bojo inferior
-    const fh = 37;   // meia-altura no encontro com a escala
     beginShape();
-    vertex(520, cy - fh * 1.5);
+    vertex(520, cy - VIOLAO_GEO.fh * 1.5);
     bezierVertex(545, cy - bh * 0.66, 575, cy - bh * 0.82, 620, cy - bh * 0.83);
     bezierVertex(690, cy - bh * 0.85, 705, cy - bh * 0.60, 720, cy - bh * 0.55);
     bezierVertex(740, cy - bh * 0.50, 775, cy - bh * 0.95, 850, cy - bh);
@@ -14,7 +13,7 @@ const GuitarView = {
     bezierVertex(1062, cy + bh * 0.66, 940, cy + bh * 1.04, 850, cy + bh);
     bezierVertex(775, cy + bh * 0.95, 740, cy + bh * 0.50, 720, cy + bh * 0.55);
     bezierVertex(705, cy + bh * 0.60, 690, cy + bh * 0.85, 620, cy + bh * 0.83);
-    bezierVertex(575, cy + bh * 0.82, 545, cy + bh * 0.66, 520, cy + fh * 1.5);
+    bezierVertex(575, cy + bh * 0.82, 545, cy + bh * 0.66, 520, cy + VIOLAO_GEO.fh * 1.5);
     endShape(CLOSE);
   },
 
@@ -94,26 +93,26 @@ const GuitarView = {
   },
 
   _drawFretboard() {
-    const cy = VIOLAO_GEO.cy, fh = 37;
+    const cy = VIOLAO_GEO.cy;
     const x0 = VIOLAO_GEO.fbX0, x1 = VIOLAO_GEO.fbX1;
     push();
     rectMode(CORNER);
     // escala (madeira escura) com gradiente próprio
-    const g = drawingContext.createLinearGradient(0, cy - fh, 0, cy + fh);
+    const g = drawingContext.createLinearGradient(0, cy - VIOLAO_GEO.fh, 0, cy + VIOLAO_GEO.fh);
     g.addColorStop(0, "#3b2415");
     g.addColorStop(1, "#24160c");
     fill(255); // garante _doFill=true; o fillStyle abaixo sobrepõe pela cor do gradiente
     drawingContext.fillStyle = g;
     stroke(26, 15, 7);
     strokeWeight(2);
-    rect(x0, cy - fh, x1 - x0, fh * 2);
+    rect(x0, cy - VIOLAO_GEO.fh, x1 - x0, VIOLAO_GEO.fh * 2);
 
     // trastes
     stroke(202, 167, 102);
     strokeWeight(2);
     for (let f = 1; f <= VIOLAO_GEO.numFrets; f++) {
       const x = activeView.fretX(f);
-      line(x, cy - fh, x, cy + fh);
+      line(x, cy - VIOLAO_GEO.fh, x, cy + VIOLAO_GEO.fh);
     }
 
     // marcadores de posição (casas 3, 5, 7)
@@ -126,22 +125,22 @@ const GuitarView = {
     // pestana (nut)
     noStroke();
     fill(232, 221, 200);
-    rect(VIOLAO_GEO.fbX0 - 4, cy - fh - 2, 7, fh * 2 + 4, 2);
+    rect(VIOLAO_GEO.fbX0 - 4, cy - VIOLAO_GEO.fh - 2, 7, VIOLAO_GEO.fh * 2 + 4, 2);
     pop();
   },
 
   _drawHeadstock() {
-    const cy = VIOLAO_GEO.cy, fh = 37;
+    const cy = VIOLAO_GEO.cy;
     push();
     // pá da cabeça (madeira escura), levemente flarada
     fill(58, 36, 20);
     stroke(28, 17, 8);
     strokeWeight(2);
     beginShape();
-    vertex(118, cy - fh * 0.95);
-    bezierVertex(90, cy - fh, 60, cy - fh, 38, cy - fh * 0.92);
-    bezierVertex(24, cy - fh * 0.86, 24, cy + fh * 0.86, 38, cy + fh * 0.92);
-    bezierVertex(60, cy + fh, 90, cy + fh, 118, cy + fh * 0.95);
+    vertex(118, cy - VIOLAO_GEO.fh * 0.95);
+    bezierVertex(90, cy - VIOLAO_GEO.fh, 60, cy - VIOLAO_GEO.fh, 38, cy - VIOLAO_GEO.fh * 0.92);
+    bezierVertex(24, cy - VIOLAO_GEO.fh * 0.86, 24, cy + VIOLAO_GEO.fh * 0.86, 38, cy + VIOLAO_GEO.fh * 0.92);
+    bezierVertex(60, cy + VIOLAO_GEO.fh, 90, cy + VIOLAO_GEO.fh, 118, cy + VIOLAO_GEO.fh * 0.95);
     endShape(CLOSE);
 
     // tarraxas: 3 de cada lado, cinza metálico

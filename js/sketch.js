@@ -135,7 +135,7 @@ function _drawHUD() {
     text("Carregando samples de áudio...", NECK.xStart, CANVAS_H - 14);
   } else {
     fill(...COLORS.hint);
-    text("← → ou 1-7: trocar acorde   |   Clique + arraste nas cordas: strum", NECK.xStart, CANVAS_H - 14);
+    text("← → ou 1-7: trocar acorde   |   Clique + arraste nas cordas: strum   |   Botão: trocar vista", NECK.xStart, CANVAS_H - 14);
   }
   pop();
 }
