@@ -130,11 +130,38 @@ const GuitarView = {
     pop();
   },
 
+  _drawHeadstock() {
+    const cy = VIOLAO_GEO.cy, fh = 37;
+    push();
+    // pá da cabeça (madeira escura), levemente flarada
+    fill(58, 36, 20);
+    stroke(28, 17, 8);
+    strokeWeight(2);
+    beginShape();
+    vertex(118, cy - fh * 0.95);
+    bezierVertex(90, cy - fh, 60, cy - fh, 38, cy - fh * 0.92);
+    bezierVertex(24, cy - fh * 0.86, 24, cy + fh * 0.86, 38, cy + fh * 0.92);
+    bezierVertex(60, cy + fh, 90, cy + fh, 118, cy + fh * 0.95);
+    endShape(CLOSE);
+
+    // tarraxas: 3 de cada lado, cinza metálico
+    const pegYs = [cy - 22, cy, cy + 22];
+    for (const py of pegYs) {
+      for (const px of [55, 100]) {
+        fill(207, 210, 214);
+        stroke(125, 128, 133);
+        strokeWeight(1.5);
+        ellipse(px, py, 12);
+      }
+    }
+    pop();
+  },
+
   draw() {
+    this._drawHeadstock();
     this._drawFretboard();
     this._drawBody();
     this._drawSoundhole();
     this._drawBridge();
-    // (cabeça entra na próxima tarefa)
   },
 };
