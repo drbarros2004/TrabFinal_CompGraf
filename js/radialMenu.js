@@ -29,7 +29,7 @@ class RadialMenu {
   }
 
   draw() {
-    const { cx, cy, r, dotR } = RADIAL;
+    const { cx, cy, r, dotR } = activeView.menuPos;
 
     // Inicializar arrays de cores na primeira execução (color() não está disponível antes de setup())
     if (!this._colors) {
