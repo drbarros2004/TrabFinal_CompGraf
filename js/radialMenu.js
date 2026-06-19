@@ -1,31 +1,43 @@
 // ─── RadialMenu ──────────────────────────────────────────────────────────────
 class RadialMenu {
   constructor() {
-    this.activeIndex   = 0;
-    this._colors       = null;  // p5.Color atual de cada item (lerp)
-    this._targetColors = null;  // alvo do lerp — atualizado ao trocar acorde
+    this.wheelIndex = 0;
+    this.chordIndex = WHEELS.map(() => 0);  // índice de acorde por roda
   }
+
+  getActiveWheel()  { return WHEELS[this.wheelIndex]; }
 
   getActiveChord() {
-    return CHORDS[CHORD_ORDER[this.activeIndex]];
+    const w = this.getActiveWheel();
+    if (w.chords.length === 0) return null;
+    return w.chords[this.chordIndex[this.wheelIndex]];
   }
 
-  navigate(dir) { // dir = -1 (esq) ou +1 (dir)
-    this.activeIndex = (this.activeIndex + dir + CHORD_ORDER.length) % CHORD_ORDER.length;
-    if (this._targetColors) this._updateTargetColors();
+  getActiveFingering() {
+    const c = this.getActiveChord();
+    return c ? c.fingering : null;
   }
 
-  selectByNumber(n) { // tecla 1–7
-    if (n >= 1 && n <= 7) {
-      this.activeIndex = n - 1;
-      if (this._targetColors) this._updateTargetColors();
-    }
+  navigate(dir) {                    // ←/→ : acorde dentro da roda
+    const w = this.getActiveWheel();
+    if (w.chords.length === 0) return;
+    const n = w.chords.length;
+    this.chordIndex[this.wheelIndex] = (this.chordIndex[this.wheelIndex] + dir + n) % n;
   }
 
-  _updateTargetColors() {
-    for (let i = 0; i < CHORD_ORDER.length; i++) {
-      this._targetColors[i] = color(...(i === this.activeIndex ? COLORS.menuActive : COLORS.menuRing));
-    }
+  navigateWheel(dir) {               // ↑/↓ : troca de roda
+    this.wheelIndex = (this.wheelIndex + dir + WHEELS.length) % WHEELS.length;
+  }
+
+  selectByNumber(n) {                // teclas 1..9
+    const w = this.getActiveWheel();
+    if (n >= 1 && n <= w.chords.length) this.chordIndex[this.wheelIndex] = n - 1;
+  }
+
+  // True se (mx,my) está dentro do miolo da roda (usado p/ abrir o construtor)
+  hitCenter(mx, my) {
+    const { cx, cy, r } = activeView.menuPos;
+    return dist(mx, my, cx, cy) < r * 0.55;
   }
 
   draw() {
