@@ -35,6 +35,7 @@ function draw() {
 
   // 4.5. Botão de alternância de view
   ToggleButton.draw();
+  MuteBlock.draw();
 
   // 5. HUD / dicas
   _drawHUD();
@@ -48,11 +49,13 @@ function keyPressed() {
   if (keyCode === UP_ARROW)    menu.navigateWheel(-1);
   if (keyCode === DOWN_ARROW)  menu.navigateWheel(+1);
 
+  if (key === 'b' || key === 'B') MuteBlock.toggle();
   if (key >= '1' && key <= '9') menu.selectByNumber(int(key)); // dígitos só; setas não caem aqui
 }
 
 function mousePressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
+  if (MuteBlock.handleClick(mouseX, mouseY)) return;
   ToggleButton.handleClick(mouseX, mouseY); // troca de view se clicar no botão
 }
 

@@ -33,7 +33,10 @@ class GuitarString {
     strokeWeight(STRING_WIDTHS[this.index]);
 
     if (!this.isRinging) {
-      stroke(...COLORS.string);
+      const fing  = menu.getActiveFingering();
+      const muted = fing && fing[this.index] === -1;
+      if (MuteBlock.enabled && muted) stroke(70, 70, 70);   // corda "morta": apagada
+      else                            stroke(...COLORS.string);
       line(x0, y, x1, y);
       return;
     }
