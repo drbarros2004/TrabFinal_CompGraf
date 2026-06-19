@@ -2,13 +2,13 @@
 const CANVAS_W = 1200;
 const CANVAS_H = 600;
 
-// ─── Paleta (inspirada em TLOU2 — tons escuros com acento cálido) ───────────
+// ─── Paleta — tons escuros com acento cálido ───────────
 const COLORS = {
   bg:           [18,  18,  18],   // fundo quase preto
   string:       [180, 155, 110],  // cordas: dourado envelhecido
   stringActive: [255, 210, 100],  // corda tocada: amarelo quente
   menuRing:     [60,  60,  60],   // anel do menu radial
-  menuActive:   [200, 130, 60],   // acorde ativo: laranja TLOU
+  menuActive:   [200, 130, 60],   // acorde ativo: laranja
   menuText:     [220, 210, 195],  // texto do menu
   hint:         [100, 100, 100],  // texto auxiliar
 };
