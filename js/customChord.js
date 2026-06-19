@@ -30,17 +30,20 @@ function buildChordLabel({ base, accidental, quality, extensions, bass }) {
 const CustomChordBuilder = {
   active: false,
   fingering: [0, 0, 0, 0, 0, 0],
-  _dom: null,   // referências dos elementos DOM do painel (criado na Task 9)
+  _dom: null,        // referências dos elementos DOM do painel (criado na Task 9)
+  _prevView: null,   // view ativa antes de abrir o construtor (restaurada ao sair)
 
   open() {
     this.active = true;
     this.fingering = [0, 0, 0, 0, 0, 0];
+    this._prevView = activeView;       // lembra a view p/ restaurar ao sair
     activeView = VIEWS.braco;          // construtor sempre na vista braço
     if (this._buildPanel) this._buildPanel();   // painel DOM (Task 9)
   },
 
   cancel() {
     this.active = false;
+    if (this._prevView) activeView = this._prevView;   // volta à view anterior
     if (this._destroyPanel) this._destroyPanel();
   },
 
