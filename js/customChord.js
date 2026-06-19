@@ -126,7 +126,7 @@ const CustomChordBuilder = {
     base.selected("C"); mk(base, 0, 0);
 
     const acc = createSelect();
-    [["♮",""],["♯","#"],["♭","b"]].forEach(([t]) => acc.option(t));
+    [["♮",""],["♯","#"],["♭","b"]].forEach(([t, v]) => acc.option(t, v));
     mk(acc, 70, 0);
 
     const qual = createSelect();
@@ -161,10 +161,9 @@ const CustomChordBuilder = {
   // Lê o estado atual do painel em um objeto de partes
   _readParts() {
     const d = this._dom;
-    const accMap = { "♮": "", "♯": "#", "♭": "b" };
     return {
       base:       d.base.value(),
-      accidental: accMap[d.acc.value()] || "",
+      accidental: d.acc.value(),   // value() já é "" | "#" | "b"
       quality:    d.qual.value() === "menor" ? "m" : "",
       extensions: d.exts.filter(e => e.cb.checked()).map(e => e.label),
       bass:       d.bass.value() === "—" ? "" : d.bass.value(),
