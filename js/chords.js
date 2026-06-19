@@ -11,7 +11,7 @@ const WHEELS = [
     name: "Campo de G",
     chords: [
       { label: "G",   notes: ["G2","B2","D3","G3","B3","G4"],     fingering: [ 3, 2, 0, 0, 0, 3] },
-      { label: "Am",  notes: ["A2","A2","E3","A3","C4","E4"],     fingering: [ 0, 0, 2, 2, 1, 0] },
+      { label: "Am",  notes: ["A2","A2","E3","A3","C4","E4"],     fingering: [-1, 0, 2, 2, 1, 0] },
       { label: "Bm",  notes: ["B2","B2","F#3","B3","D4","F#4"],   fingering: [-1, 2, 4, 4, 3, 2] },
       { label: "C",   notes: ["E2","C3","E3","G3","C4","E4"],     fingering: [-1, 3, 2, 0, 1, 0] },
       { label: "D",   notes: ["E2","A2","D3","A3","D4","F#4"],    fingering: [-1,-1, 0, 2, 3, 2] },
@@ -28,7 +28,7 @@ const WHEELS = [
       { label: "Em",  notes: ["E2","B2","E3","G3","B3","E4"],     fingering: [ 0, 2, 2, 0, 0, 0] },
       { label: "F",   notes: ["F2","C3","F3","A3","C4","F4"],     fingering: [ 1, 3, 3, 2, 1, 1] },
       { label: "G",   notes: ["G2","B2","D3","G3","B3","G4"],     fingering: [ 3, 2, 0, 0, 0, 3] },
-      { label: "Am",  notes: ["A2","A2","E3","A3","C4","E4"],     fingering: [ 0, 0, 2, 2, 1, 0] },
+      { label: "Am",  notes: ["A2","A2","E3","A3","C4","E4"],     fingering: [-1, 0, 2, 2, 1, 0] },
       { label: "B°",  notes: ["B2","B2","F3","B3","D4","D4"],     fingering: [-1, 2, 3, 4, 3,-1] },
     ],
   },
