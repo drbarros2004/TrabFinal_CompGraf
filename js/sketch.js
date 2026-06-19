@@ -48,8 +48,7 @@ function keyPressed() {
   if (keyCode === UP_ARROW)    menu.navigateWheel(-1);
   if (keyCode === DOWN_ARROW)  menu.navigateWheel(+1);
 
-  const n = int(key);
-  if (!isNaN(n)) menu.selectByNumber(n);
+  if (key >= '1' && key <= '9') menu.selectByNumber(int(key)); // dígitos só; setas não caem aqui
 }
 
 function mousePressed() {
