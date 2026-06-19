@@ -27,8 +27,9 @@ function draw() {
     s.draw();
   }
 
-  // 3.5. Desenhar dedilhado (pontos de dedo)
-  _drawFingering();
+  // 3.5. Dedilhado (ou construtor de acorde)
+  if (CustomChordBuilder.active) CustomChordBuilder.draw();
+  else                           _drawFingering();
 
   // 4. Menu radial
   menu.draw();
@@ -44,6 +45,15 @@ function draw() {
 function keyPressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
 
+  if (CustomChordBuilder.active) {
+    if (keyCode === ESCAPE) CustomChordBuilder.cancel();
+    return;   // enquanto constrói, ignora os outros atalhos
+  }
+  if ((key === '+' || key === '=') && menu.getActiveWheel().id === "custom") {
+    CustomChordBuilder.open();
+    return;
+  }
+
   if (keyCode === LEFT_ARROW)  menu.navigate(-1);
   if (keyCode === RIGHT_ARROW) menu.navigate(+1);
   if (keyCode === UP_ARROW)    menu.navigateWheel(-1);
@@ -55,8 +65,13 @@ function keyPressed() {
 
 function mousePressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
+  if (CustomChordBuilder.active) { CustomChordBuilder.handleClick(mouseX, mouseY); return; }
   if (MuteBlock.handleClick(mouseX, mouseY)) return;
-  ToggleButton.handleClick(mouseX, mouseY); // troca de view se clicar no botão
+  if (ToggleButton.handleClick(mouseX, mouseY)) return;
+  if (menu.getActiveWheel().id === "custom" && menu.hitCenter(mouseX, mouseY)) {
+    CustomChordBuilder.open();
+    return;
+  }
 }
 
 // ─── Helpers de render ───────────────────────────────────────────────────────
