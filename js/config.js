@@ -58,6 +58,14 @@ const RADIAL = {
   dotR:   6,    // raio dos pontos
 };
 
+// ─── Indicador de rodas (dots abaixo do menu radial) ─────────────────────────
+const WHEEL_DOTS = {
+  gap:        18,   // espaçamento horizontal entre dots
+  yOffset:    28,   // distância abaixo da borda inferior do anel
+  rActive:    7,    // raio do dot da roda ativa
+  rInactive:  4,    // raio dos demais
+};
+
 // ─── Braço — trastes ────────────────────────────────────────────────────────
 const NUM_FRETS    = 7;
 const STRING_NAMES = ["E", "A", "D", "G", "B", "E"]; // índice 0 = corda 6 (E2)

@@ -42,55 +42,78 @@ class RadialMenu {
 
   draw() {
     const { cx, cy, r, dotR } = activeView.menuPos;
-
-    // Inicializar arrays de cores na primeira execução (color() não está disponível antes de setup())
-    if (!this._colors) {
-      this._colors       = Array.from({ length: CHORD_ORDER.length }, (_, i) =>
-        color(...(i === this.activeIndex ? COLORS.menuActive : COLORS.menuRing))
-      );
-      this._targetColors = Array.from({ length: CHORD_ORDER.length }, (_, i) =>
-        color(...(i === this.activeIndex ? COLORS.menuActive : COLORS.menuRing))
-      );
-    }
-
-    // Lerp frame-rate independent: k = 1 - 0.005^(dt/1000) — converge suavemente ~200ms
-    const k = 1 - Math.pow(0.005, deltaTime / 1000);
-    for (let i = 0; i < CHORD_ORDER.length; i++) {
-      this._colors[i] = lerpColor(this._colors[i], this._targetColors[i], k);
-    }
+    const wheel  = this.getActiveWheel();
+    const chords = wheel.chords;
+    const isCustomEmpty = wheel.id === "custom" && chords.length === 0;
 
     push();
-    noFill();
 
     // Anel de fundo
+    noFill();
     stroke(...COLORS.menuRing);
     strokeWeight(1);
+    if (isCustomEmpty) drawingContext.setLineDash([5, 5]);
     ellipse(cx, cy, r * 2, r * 2);
+    drawingContext.setLineDash([]);
 
-    // Rótulos e pontos
-    for (let i = 0; i < CHORD_ORDER.length; i++) {
-      const angle = -HALF_PI + i * (TWO_PI / CHORD_ORDER.length);
-      const px = cx + r * cos(angle);
-      const py = cy + r * sin(angle);
-      const isActive = i === this.activeIndex;
-
-      fill(this._colors[i]);
+    if (isCustomEmpty) {
+      // Estado vazio: "+" central que abre o construtor
       noStroke();
-      ellipse(px, py, dotR * 2);
-
+      fill(...COLORS.menuActive);
       textAlign(CENTER, CENTER);
-      textSize(isActive ? 14 : 12);
-      text(CHORD_ORDER[i], px + cos(angle) * 18, py + sin(angle) * 18);
+      textSize(34);
+      text("+", cx, cy - 6);
+      textSize(11);
+      fill(...COLORS.hint);
+      text("adicionar", cx, cy + 16);
+    } else {
+      const n      = chords.length;
+      const active = this.chordIndex[this.wheelIndex];
+
+      // Rótulos e pontos
+      for (let i = 0; i < n; i++) {
+        const angle = -HALF_PI + i * (TWO_PI / n);
+        const px = cx + r * cos(angle);
+        const py = cy + r * sin(angle);
+        const isActive = i === active;
+
+        noStroke();
+        fill(...(isActive ? COLORS.menuActive : COLORS.menuRing));
+        ellipse(px, py, dotR * 2);
+
+        fill(...(isActive ? COLORS.menuActive : COLORS.menuText));
+        textAlign(CENTER, CENTER);
+        textSize(isActive ? 14 : 12);
+        text(chords[i].label, px + cos(angle) * 18, py + sin(angle) * 18);
+      }
+
+      // Nome do acorde ativo no centro
+      fill(...COLORS.menuActive);
+      noStroke();
+      textAlign(CENTER, CENTER);
+      textSize(20);
+      textStyle(BOLD);
+      text(chords[active].label, cx, cy);
+      textStyle(NORMAL);
     }
 
-    // Nome do acorde ativo no centro
-    fill(...COLORS.menuActive);
-    noStroke();
+    // ── Dots de roda (abaixo do anel) ──
+    const dotsY = cy + r + WHEEL_DOTS.yOffset;
+    const total = (WHEELS.length - 1) * WHEEL_DOTS.gap;
+    const startX = cx - total / 2;
+    for (let i = 0; i < WHEELS.length; i++) {
+      const isActive = i === this.wheelIndex;
+      fill(...(isActive ? COLORS.menuActive : COLORS.menuRing));
+      noStroke();
+      ellipse(startX + i * WHEEL_DOTS.gap, dotsY,
+              (isActive ? WHEEL_DOTS.rActive : WHEEL_DOTS.rInactive) * 2);
+    }
+
+    // Nome da roda + posição
+    fill(...COLORS.hint);
     textAlign(CENTER, CENTER);
-    textSize(20);
-    textStyle(BOLD);
-    text(this.getActiveChord().label, cx, cy);
-    textStyle(NORMAL);
+    textSize(11);
+    text(`${wheel.name} · ${this.wheelIndex + 1}/${WHEELS.length}`, cx, dotsY + 16);
 
     pop();
   }
