@@ -1,9 +1,10 @@
 // ─── sketch.js — orquestração principal ─────────────────────────────────────
 let strings   = [];
 let menu;
+let cnv;
 
 function setup() {
-  createCanvas(CANVAS_W, CANVAS_H);
+  cnv = createCanvas(CANVAS_W, CANVAS_H);
   textFont('monospace');
 
   for (let i = 0; i < 6; i++) {
@@ -155,7 +156,8 @@ function _drawHUD() {
     text("Carregando samples de áudio...", NECK.xStart, CANVAS_H - 14);
   } else {
     fill(...COLORS.hint);
-    text("← → ou 1-7: trocar acorde   |   Clique + arraste nas cordas: strum   |   Botão: trocar vista", NECK.xStart, CANVAS_H - 14);
+    text("← → / 1-7: acorde   |   ↑ ↓: campo   |   B: bloquear abafadas   |   +: criar acorde (roda custom)   |   arraste nas cordas: tocar",
+         NECK.xStart, CANVAS_H - 14);
   }
   pop();
 }
