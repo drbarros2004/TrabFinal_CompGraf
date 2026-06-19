@@ -45,6 +45,9 @@ function keyPressed() {
 
   if (keyCode === LEFT_ARROW)  menu.navigate(-1);
   if (keyCode === RIGHT_ARROW) menu.navigate(+1);
+  if (keyCode === UP_ARROW)    menu.navigateWheel(-1);
+  if (keyCode === DOWN_ARROW)  menu.navigateWheel(+1);
+
   const n = int(key);
   if (!isNaN(n)) menu.selectByNumber(n);
 }
@@ -90,8 +93,8 @@ function _drawNeck() {
 }
 
 function _drawFingering() {
-  const activeKey = CHORD_ORDER[menu.activeIndex];
-  const frets     = FINGERINGS[activeKey];
+  const frets = menu.getActiveFingering();
+  if (!frets) return;   // roda custom vazia
 
   push();
   for (let i = 0; i < 6; i++) {
