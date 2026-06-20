@@ -23,9 +23,10 @@ function draw() {
   activeView.drawBackground();
 
   // 3. Desenhar cada corda
-  for (const s of strings) {
-    s.update();
-    s.draw();
+  const frets = menu.getActiveFingering();
+  for (let i = 0; i < strings.length; i++) {
+    strings[i].update();
+    strings[i].draw(frets ? frets[i] : 0);
   }
 
   // 3.5. Dedilhado do acorde ativo
@@ -119,7 +120,7 @@ function _drawFingering() {
       // Corda pressionada: ponto laranja no centro do traste
       noStroke();
       fill(...COLORS.menuActive);
-      ellipse(activeView.fretX(f - 0.5), y, 14, 14);
+      ellipse(activeView.fretX(f - 0.5), y, 20, 20);
     }
   }
   pop();
