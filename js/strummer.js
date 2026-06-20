@@ -17,12 +17,8 @@ const Strummer = {
         mouseX >= activeView.stringX0 && mouseX <= activeView.stringX1;
 
       if (crossed && mouseIsPressed && now - this._lastTrigger[i] > STRUM_COOLDOWN_MS) {
-        const muted = activeChord.fingering[i] === -1;
-
-        // Com bloqueio LIGADO, a corda abafada fica totalmente inerte (sem vibração
-        // e sem som). Com bloqueio DESLIGADO (padrão), cai no fluxo normal abaixo e
-        // toca como antes — inclusive cordas abafadas, que soam notes[i].
-        if (typeof MuteBlock !== "undefined" && MuteBlock.enabled && muted) {
+        // Corda abafada (×) nunca soa nem vibra.
+        if (activeChord.fingering[i] === -1) {
           this._lastTrigger[i] = now;
           continue;
         }
@@ -31,8 +27,8 @@ const Strummer = {
         const vel = constrain(dy / 60, 0.15, 1.0);
         strings[i].pluck(vel);
 
-        const note = activeChord.notes[i];
-        if (note !== null) AudioEngine.playNote(i, note, vel);  // null = sem nota definida (corda custom abafada)
+        const note = noteForString(i, activeChord.fingering[i]);
+        if (note) AudioEngine.playNote(i, note, vel);
 
         this._lastTrigger[i] = now;
       }
