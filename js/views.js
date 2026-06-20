@@ -43,5 +43,5 @@ const VIEWS = {
   },
 };
 
-// Ponteiro para a view ativa (trocado pelo ToggleButton).
+// Ponteiro para a view ativa (alterado pela tecla V).
 let activeView = VIEWS.braco;

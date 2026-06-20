@@ -34,9 +34,6 @@ function draw() {
   // 4. Menu radial
   menu.draw();
 
-  // 4.5. Botão de alternância de view
-  ToggleButton.draw();
-
   // 5. HUD / dicas
   _drawHUD();
 }
@@ -49,12 +46,14 @@ function keyPressed() {
   if (keyCode === UP_ARROW)    menu.navigateWheel(-1);
   if (keyCode === DOWN_ARROW)  menu.navigateWheel(+1);
 
+  if (key === 'v' || key === 'V') {
+    activeView = (activeView === VIEWS.braco) ? VIEWS.violao : VIEWS.braco;
+  }
   if (key >= '1' && key <= '9') menu.selectByNumber(int(key));
 }
 
 function mousePressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
-  if (ToggleButton.handleClick(mouseX, mouseY)) return;
 }
 
 // ─── Helpers de render ───────────────────────────────────────────────────────
