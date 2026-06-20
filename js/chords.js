@@ -5,6 +5,15 @@
 // Notas de cordas abafadas nos presets recebem a tônica/nota harmônica para o
 // caso "bloqueio OFF" (comportamento atual de tocar tudo).
 
+// Nota de cada corda solta: índice 0 = corda 6 (E2) → 5 = corda 1 (E4)
+const OPEN_NOTES = ["E2", "A2", "D3", "G3", "B3", "E4"];
+
+// Nota soada pela corda i no traste f (f >= 0); null se abafada (f < 0).
+function noteForString(i, f) {
+  if (f < 0) return null;
+  return Tone.Frequency(OPEN_NOTES[i]).transpose(f).toNote();
+}
+
 const WHEELS = [
   {
     id: "campoG",
