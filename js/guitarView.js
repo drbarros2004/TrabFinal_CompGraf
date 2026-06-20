@@ -1,49 +1,113 @@
 // ─── GuitarView — desenho do violão inteiro (construído por camadas) ─────────
 const GuitarView = {
-  // Silhueta do corpo (Bézier), simétrica em torno de cy. Reusada p/ fill e contorno.
-  _bodyShape() {
+  // Pontos da silhueta do corpo, partilhados entre o traçado p5 e o path do canvas.
+  _bodyPoints() {
     const cy = VIOLAO_GEO.cy;
-    const bh = 198;  // meia-altura do bojo inferior
+    // meia-alturas: junta do braço, bojo superior, cintura, bojo inferior
+    return {
+      start: [520, cy - 68],
+      curves: [
+        [560, cy - 90,  600, cy - 150, 660, cy - 150],  // bojo superior (topo)
+        [715, cy - 150, 735, cy - 120, 775, cy - 120],  // entra na cintura
+        [815, cy - 120, 850, cy - 190, 905, cy - 190],  // bojo inferior (topo)
+        [995, cy - 190, 1075, cy - 110, 1070, cy],       // arredonda até a ponta
+        [1075, cy + 110, 995, cy + 190, 905, cy + 190],  // bojo inferior (base)
+        [850, cy + 190, 815, cy + 120, 775, cy + 120],  // sai da cintura
+        [735, cy + 120, 715, cy + 150, 660, cy + 150],  // bojo superior (base)
+        [600, cy + 150, 560, cy + 90,  520, cy + 68],   // volta à junta do braço
+      ],
+    };
+  },
+
+  // Traça a silhueta no p5 (para contorno/stroke).
+  _bodyShape() {
+    const p = this._bodyPoints();
     beginShape();
-    vertex(520, cy - VIOLAO_GEO.fh * 1.5);
-    bezierVertex(545, cy - bh * 0.66, 575, cy - bh * 0.82, 620, cy - bh * 0.83);
-    bezierVertex(690, cy - bh * 0.85, 705, cy - bh * 0.60, 720, cy - bh * 0.55);
-    bezierVertex(740, cy - bh * 0.50, 775, cy - bh * 0.95, 850, cy - bh);
-    bezierVertex(940, cy - bh * 1.04, 1062, cy - bh * 0.66, 1062, cy);
-    bezierVertex(1062, cy + bh * 0.66, 940, cy + bh * 1.04, 850, cy + bh);
-    bezierVertex(775, cy + bh * 0.95, 740, cy + bh * 0.50, 720, cy + bh * 0.55);
-    bezierVertex(705, cy + bh * 0.60, 690, cy + bh * 0.85, 620, cy + bh * 0.83);
-    bezierVertex(575, cy + bh * 0.82, 545, cy + bh * 0.66, 520, cy + VIOLAO_GEO.fh * 1.5);
+    vertex(p.start[0], p.start[1]);
+    for (const c of p.curves) bezierVertex(c[0], c[1], c[2], c[3], c[4], c[5]);
     endShape(CLOSE);
+  },
+
+  // Traça a silhueta no contexto canvas (para clip/fill com textura).
+  _traceBody(ctx) {
+    const p = this._bodyPoints();
+    ctx.beginPath();
+    ctx.moveTo(p.start[0], p.start[1]);
+    for (const c of p.curves) ctx.bezierCurveTo(c[0], c[1], c[2], c[3], c[4], c[5]);
+    ctx.closePath();
+  },
+
+  // Gera uma textura de madeira num buffer offscreen (sem asset externo).
+  _makeWoodTexture(w, h, base, streak) {
+    const g = createGraphics(w, h);
+    g.background(base[0], base[1], base[2]);
+    g.noFill();
+    g.strokeWeight(1);
+    // veio horizontal (corre ao longo do tampo, paralelo às cordas)
+    const nLines = floor(h / 2.5);
+    for (let i = 0; i < nLines; i++) {
+      const y = (i / nLines) * h;
+      const a = 22 + 46 * noise(i * 0.35);
+      g.stroke(streak[0], streak[1], streak[2], a);
+      g.beginShape();
+      for (let x = -4; x <= w + 4; x += 10) {
+        const wob = (noise(i * 0.18, x * 0.012) - 0.5) * 9;
+        g.vertex(x, y + wob);
+      }
+      g.endShape();
+    }
+    // leve escurecimento nas bordas (topo/base)
+    g.noStroke();
+    for (let y = 0; y < h; y++) {
+      const t = abs(y / h - 0.5) * 2;
+      g.stroke(40, 24, 10, t * 28);
+      g.line(0, y, w, y);
+    }
+    return g;
+  },
+
+  _topTex() {
+    if (!this._tex) this._tex = this._makeWoodTexture(600, 430, [216, 170, 110], [150, 100, 55]);
+    return this._tex;
   },
 
   _drawBody() {
     const cy = VIOLAO_GEO.cy;
+    const ctx = drawingContext;
     push();
-    // gradiente vertical de madeira via canvas API subjacente
-    const g = drawingContext.createLinearGradient(0, cy - 198, 0, cy + 198);
-    g.addColorStop(0,   "#d9a25e");
-    g.addColorStop(0.5, "#c98a44");
-    g.addColorStop(1,   "#a96e2f");
-    fill(255); // garante _doFill=true; o fillStyle abaixo sobrepõe a cor pelo gradiente
-    drawingContext.fillStyle = g;
-    stroke(94, 61, 28);
+
+    // sombra projetada sob o corpo
+    ctx.save();
+    this._traceBody(ctx);
+    ctx.shadowColor = 'rgba(0,0,0,0.55)';
+    ctx.shadowBlur = 34;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 12;
+    ctx.fillStyle = '#1a120a';
+    ctx.fill();
+    ctx.restore();
+
+    // preenchimento por textura (recorte na silhueta)
+    ctx.save();
+    this._traceBody(ctx);
+    ctx.clip();
+    image(this._topTex(), 500, cy - 215, 600, 430);
+    // luz vinda de cima + sombra embaixo
+    const g = ctx.createLinearGradient(0, cy - 205, 0, cy + 205);
+    g.addColorStop(0,    'rgba(255,246,222,0.28)');
+    g.addColorStop(0.45, 'rgba(255,255,255,0.0)');
+    g.addColorStop(1,    'rgba(55,32,12,0.40)');
+    ctx.fillStyle = g;
+    ctx.fillRect(500, cy - 215, 600, 430);
+    ctx.restore();
+
+    // contorno escuro + filete (binding) claro por dentro
+    noFill();
+    stroke(74, 48, 24);
     strokeWeight(3);
     this._bodyShape();
-
-    // veio da madeira: linhas curvas translúcidas
-    stroke(120, 80, 40, 40);
-    strokeWeight(1);
-    noFill();
-    for (let k = -3; k <= 3; k++) {
-      const yy = cy + k * 26;
-      curve(560, yy - 8, 640, yy, 940, yy, 1040, yy - 8);
-    }
-
-    // filete (binding) claro por dentro da borda
-    noFill();
-    stroke(240, 217, 168, 130);
-    strokeWeight(1.2);
+    stroke(240, 225, 185, 160);
+    strokeWeight(1.3);
     this._bodyShape();
     pop();
   },
@@ -75,20 +139,23 @@ const GuitarView = {
   },
 
   _drawBridge() {
-    const cy = VIOLAO_GEO.cy, bx = 965;
+    const cy = VIOLAO_GEO.cy, bx = 945;
     push();
     rectMode(CENTER);
     // base do cavalete
-    fill(42, 26, 13);
-    stroke(74, 48, 24);
-    strokeWeight(2);
-    rect(bx, cy, 60, 126, 8);
-    // pininhos onde as cordas ancoram
+    fill(36, 22, 11);
+    stroke(20, 12, 6);
+    strokeWeight(1.5);
+    rect(bx, cy, 80, 150, 6);
+    // rastilho (saddle) claro, do lado da boca
     noStroke();
-    fill(228, 220, 200);
-    for (let i = 0; i < 6; i++) {
-      ellipse(bx + 8, activeView.stringY(i), 6);
-    }
+    fill(225, 215, 195);
+    rect(bx - 20, cy, 6, 132, 2);
+    // tie block + furos das cordas
+    fill(24, 14, 7);
+    rect(bx + 16, cy, 30, 132, 3);
+    fill(210, 200, 180);
+    for (let i = 0; i < 6; i++) ellipse(bx + 16, activeView.stringY(i), 5);
     pop();
   },
 
