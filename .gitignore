@@ -1,6 +1,12 @@
 # Dependências (caso use npm no futuro)
 node_modules/
 
+# Tooling de dev (screenshot loop do Claude) — não faz parte da entrega
+package.json
+package-lock.json
+dev/
+shots/
+
 # Companion visual do brainstorming (efêmero)
 .superpowers/
 docs/superpowers/
