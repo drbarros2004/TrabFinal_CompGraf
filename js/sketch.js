@@ -36,7 +36,6 @@ function draw() {
 
   // 4.5. Botão de alternância de view
   ToggleButton.draw();
-  MuteBlock.draw();
 
   // 5. HUD / dicas
   _drawHUD();
@@ -50,13 +49,11 @@ function keyPressed() {
   if (keyCode === UP_ARROW)    menu.navigateWheel(-1);
   if (keyCode === DOWN_ARROW)  menu.navigateWheel(+1);
 
-  if (key === 'b' || key === 'B') MuteBlock.toggle();
   if (key >= '1' && key <= '9') menu.selectByNumber(int(key));
 }
 
 function mousePressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
-  if (MuteBlock.handleClick(mouseX, mouseY)) return;
   if (ToggleButton.handleClick(mouseX, mouseY)) return;
 }
 
@@ -141,7 +138,7 @@ function _drawHUD() {
     text("Carregando samples de áudio...", NECK.xStart, CANVAS_H - 14);
   } else {
     fill(...COLORS.hint);
-    text("← → / 1-7: acorde   |   ↑ ↓: campo   |   B: bloquear abafadas   |   +: criar acorde (roda custom)   |   arraste nas cordas: tocar",
+    text("← → / 1-7: acorde   |   ↑ ↓: campo   |   +: criar acorde (roda custom)   |   arraste nas cordas: tocar",
          NECK.xStart, CANVAS_H - 14);
   }
   pop();
