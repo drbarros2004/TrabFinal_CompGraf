@@ -24,7 +24,7 @@ const VIEWS = {
     fretX:     (f) => fretX(f),
     numFrets:  NUM_FRETS,
     ampScale:  1,
-    menuPos:   { cx: RADIAL.cx, cy: RADIAL.cy, r: RADIAL.r, dotR: RADIAL.dotR },
+    menuPos:   { cx: 1085, cy: 290, r: RADIAL.r, dotR: RADIAL.dotR },
     drawBackground: () => _drawNeck(),   // _drawNeck() definido em sketch.js
   },
 
