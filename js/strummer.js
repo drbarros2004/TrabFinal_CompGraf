@@ -3,7 +3,6 @@ const Strummer = {
   _lastTrigger: new Array(6).fill(0),
 
   update(strings, activeChord) {
-    if (typeof CustomChordBuilder !== "undefined" && CustomChordBuilder.active) return; // não toca durante o construtor
     if (!activeChord) return;  // roda custom vazia
 
     for (let i = 0; i < 6; i++) {
