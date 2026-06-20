@@ -3,6 +3,7 @@ const AudioEngine = {
   _ready:        false,
   _initializing: false,
   _sampler:      null,
+  _ringing:      new Array(6).fill(null),
 
   async init() {
     if (this._ready || this._initializing || this._sampler) return;
@@ -41,8 +42,24 @@ const AudioEngine = {
     try {
       const v = Math.max(0, Math.min(1, velocity));
       this._sampler.triggerAttack(noteName, Tone.now(), v);
+      this._ringing[stringIndex] = noteName;
     } catch (e) {
       console.warn("[AudioEngine] playNote falhou:", { stringIndex, noteName, velocity }, e);
+    }
+  },
+
+  // Ao trocar de acorde: silencia só as cordas cuja nota mudou (ou virou abafada);
+  // notas comuns aos dois acordes continuam soando.
+  reconcile(fingering) {
+    if (!this._ready || !fingering) return;
+    for (let i = 0; i < 6; i++) {
+      const newNote = fingering[i] < 0 ? null : noteForString(i, fingering[i]);
+      const cur = this._ringing[i];
+      if (cur && cur !== newNote) {
+        try { this._sampler.triggerRelease(cur, Tone.now()); } catch (e) {}
+        this._ringing[i] = null;
+        if (typeof strings !== 'undefined' && strings[i]) strings[i].isRinging = false;
+      }
     }
   },
 };

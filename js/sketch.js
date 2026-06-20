@@ -60,6 +60,9 @@ function keyPressed() {
     activeView = (activeView === VIEWS.braco) ? VIEWS.violao : VIEWS.braco;
   }
   if (key >= '1' && key <= '9') menu.selectByNumber(int(key));
+
+  // Troca de acorde: silencia só as notas que mudaram
+  AudioEngine.reconcile(menu.getActiveFingering());
 }
 
 function mousePressed() {
