@@ -46,8 +46,9 @@ const STRUM_COOLDOWN_MS = 70;        // ms mínimos entre dois toques na mesma c
 
 // ─── Áudio ─────────────────────────────────────────────────────────────────
 const AUDIO = {
-  minDb: -12, // volume mínimo (movimento lento)
-  maxDb:  0,  // volume máximo (movimento rápido)
+  minDb: -12,    // volume mínimo (movimento lento)
+  maxDb:  0,     // volume máximo (movimento rápido)
+  releaseSec: 0.6, // fade ao trocar de acorde: dissipa em vez de cortar seco
 };
 
 // ─── Menu radial ────────────────────────────────────────────────────────────

@@ -20,6 +20,7 @@ const AudioEngine = {
           E4: "E4.mp3",
         },
         baseUrl: "https://nbrosowsky.github.io/tonejs-instruments/samples/guitar-acoustic/",
+        release: AUDIO.releaseSec, // fade suave no triggerRelease (troca de acorde)
         onload: () => {
           this._ready = true;
           console.log("[AudioEngine] Sampler pronto — guitar-acoustic");
