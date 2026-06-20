@@ -137,7 +137,7 @@ function _drawHUD() {
     text("Carregando samples de áudio...", NECK.xStart, CANVAS_H - 14);
   } else {
     fill(...COLORS.hint);
-    text("← → / 1-7: acorde   |   ↑ ↓: campo   |   +: criar acorde (roda custom)   |   arraste nas cordas: tocar",
+    text("← → / 1-7: acorde   |   ↑ ↓: roda   |   V: braço/violão   |   arraste nas cordas: tocar",
          NECK.xStart, CANVAS_H - 14);
   }
   pop();
