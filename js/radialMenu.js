@@ -89,12 +89,6 @@ class RadialMenu {
               (isActive ? WHEEL_DOTS.rActive : WHEEL_DOTS.rInactive) * 2);
     }
 
-    // Nome da roda + posição
-    fill(...COLORS.hint);
-    textAlign(CENTER, CENTER);
-    textSize(11);
-    text(`${wheel.name} · ${this.wheelIndex + 1}/${WHEELS.length}`, cx, dotsY + 16);
-
     pop();
   }
 }

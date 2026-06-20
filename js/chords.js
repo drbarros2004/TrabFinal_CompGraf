@@ -2,7 +2,7 @@
 // Cada acorde: { label, fingering }
 //   fingering: 6 inteiros; índice 0 = corda 6 (grave/topo) → 5 = corda 1 (aguda);
 //   -1 = abafada, 0 = solta, 1..N = traste pressionado.
-// A nota soada por cada corda é derivada do fingering por noteForString().
+//   A nota soada por cada corda é derivada do fingering por noteForString().
 
 // Nota de cada corda solta: índice 0 = corda 6 (E2) → 5 = corda 1 (E4)
 const OPEN_NOTES = ["E2", "A2", "D3", "G3", "B3", "E4"];
@@ -13,55 +13,93 @@ function noteForString(i, f) {
   return Tone.Frequency(OPEN_NOTES[i]).transpose(f).toNote();
 }
 
+// ─── Template das rodas ──────────────────────────────────────────────────────
+// 6 rodas (5 do jogo + 1 customizada), 6 acordes cada.
+// A POSIÇÃO de cada acorde na roda segue a ORDEM do array — índice 0 no topo,
+// daí no sentido horário:
+//   0 = topo · 1 = cima-direita · 2 = baixo-direita ·
+//   3 = base · 4 = baixo-esquerda · 5 = cima-esquerda.
+//
+// As digitações (fingering) abaixo são PLACEHOLDERS (cordas soltas).
+// Substitua cada PLACEHOLDER pela digitação real, ex.: fingering: [-1, 3, 2, 0, 1, 0].
+const PLACEHOLDER = [0, 0, 0, 0, 0, 0];
+
 const WHEELS = [
+  // Roda 1 — exemplo no formato da imagem (campo de B). Ajuste os fingerings.
   {
-    id: "campoG",
-    name: "Campo de G",
+    id: "roda1",
     chords: [
-      { label: "G",   fingering: [ 3, 2, 0, 0, 0, 3] },
-      { label: "Am",  fingering: [-1, 0, 2, 2, 1, 0] },
-      { label: "Bm",  fingering: [-1, 2, 4, 4, 3, 2] },
-      { label: "C",   fingering: [-1, 3, 2, 0, 1, 0] },
-      { label: "D",   fingering: [-1,-1, 0, 2, 3, 2] },
-      { label: "Em",  fingering: [ 0, 2, 2, 0, 0, 0] },
-      { label: "F#°", fingering: [ 2,-1, 4, 2, 1, 2] },
+      { label: "B",   fingering: PLACEHOLDER }, // topo
+      { label: "F#",  fingering: PLACEHOLDER }, // cima-direita
+      { label: "C#m", fingering: PLACEHOLDER }, // baixo-direita
+      { label: "G#m", fingering: PLACEHOLDER }, // base
+      { label: "D#m", fingering: PLACEHOLDER }, // baixo-esquerda
+      { label: "E",   fingering: PLACEHOLDER }, // cima-esquerda
     ],
   },
+
+  // Roda 2 — preencha com a roda exata do jogo.
   {
-    id: "campoC",
-    name: "Campo de C",
+    id: "roda2",
     chords: [
-      { label: "C",   fingering: [-1, 3, 2, 0, 1, 0] },
-      { label: "Dm",  fingering: [-1,-1, 0, 2, 3, 1] },
-      { label: "Em",  fingering: [ 0, 2, 2, 0, 0, 0] },
-      { label: "F",   fingering: [ 1, 3, 3, 2, 1, 1] },
-      { label: "G",   fingering: [ 3, 2, 0, 0, 0, 3] },
-      { label: "Am",  fingering: [-1, 0, 2, 2, 1, 0] },
-      { label: "B°",  fingering: [-1, 2, 3, 4, 3,-1] },
+      { label: "?", fingering: PLACEHOLDER }, // topo
+      { label: "?", fingering: PLACEHOLDER }, // cima-direita
+      { label: "?", fingering: PLACEHOLDER }, // baixo-direita
+      { label: "?", fingering: PLACEHOLDER }, // base
+      { label: "?", fingering: PLACEHOLDER }, // baixo-esquerda
+      { label: "?", fingering: PLACEHOLDER }, // cima-esquerda
     ],
   },
+
+  // Roda 3 — preencha com a roda exata do jogo.
   {
-    id: "campoD",
-    name: "Campo de D",
+    id: "roda3",
     chords: [
-      { label: "D",   fingering: [-1,-1, 0, 2, 3, 2] },
-      { label: "Em",  fingering: [ 0, 2, 2, 0, 0, 0] },
-      { label: "F#m", fingering: [ 2, 4, 4, 2, 2, 2] },
-      { label: "G",   fingering: [ 3, 2, 0, 0, 0, 3] },
-      { label: "A",   fingering: [-1, 0, 2, 2, 2, 0] },
-      { label: "Bm",  fingering: [-1, 2, 4, 4, 3, 2] },
-      { label: "C#°", fingering: [-1, 4, 5, 6, 5,-1] },
+      { label: "?", fingering: PLACEHOLDER }, // topo
+      { label: "?", fingering: PLACEHOLDER }, // cima-direita
+      { label: "?", fingering: PLACEHOLDER }, // baixo-direita
+      { label: "?", fingering: PLACEHOLDER }, // base
+      { label: "?", fingering: PLACEHOLDER }, // baixo-esquerda
+      { label: "?", fingering: PLACEHOLDER }, // cima-esquerda
     ],
   },
+
+  // Roda 4 — preencha com a roda exata do jogo.
+  {
+    id: "roda4",
+    chords: [
+      { label: "?", fingering: PLACEHOLDER }, // topo
+      { label: "?", fingering: PLACEHOLDER }, // cima-direita
+      { label: "?", fingering: PLACEHOLDER }, // baixo-direita
+      { label: "?", fingering: PLACEHOLDER }, // base
+      { label: "?", fingering: PLACEHOLDER }, // baixo-esquerda
+      { label: "?", fingering: PLACEHOLDER }, // cima-esquerda
+    ],
+  },
+
+  // Roda 5 — preencha com a roda exata do jogo.
+  {
+    id: "roda5",
+    chords: [
+      { label: "?", fingering: PLACEHOLDER }, // topo
+      { label: "?", fingering: PLACEHOLDER }, // cima-direita
+      { label: "?", fingering: PLACEHOLDER }, // baixo-direita
+      { label: "?", fingering: PLACEHOLDER }, // base
+      { label: "?", fingering: PLACEHOLDER }, // baixo-esquerda
+      { label: "?", fingering: PLACEHOLDER }, // cima-esquerda
+    ],
+  },
+
+  // Roda 6 — customizada (seus próprios acordes).
   {
     id: "custom",
-    name: "Meus acordes",
-    // Adicione seus acordes aqui — basta { label, fingering }.
-    // fingering: 6 inteiros, índice 0 = corda 6 (grave) → 5 = corda 1 (aguda);
-    //   -1 = abafada, 0 = solta, 1.. = traste pressionado. As notas são derivadas.
     chords: [
-      { label: "E",  fingering: [ 0, 2, 2, 1, 0, 0] },
-      { label: "A7", fingering: [-1, 0, 2, 0, 2, 0] },
+      { label: "?", fingering: PLACEHOLDER }, // topo
+      { label: "?", fingering: PLACEHOLDER }, // cima-direita
+      { label: "?", fingering: PLACEHOLDER }, // baixo-direita
+      { label: "?", fingering: PLACEHOLDER }, // base
+      { label: "?", fingering: PLACEHOLDER }, // baixo-esquerda
+      { label: "?", fingering: PLACEHOLDER }, // cima-esquerda
     ],
   },
 ];
