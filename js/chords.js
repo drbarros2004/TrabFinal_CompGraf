@@ -76,7 +76,7 @@ const WHEELS = [
   {
     id: "roda5",
     chords: [
-      { label: "Eb", fingering: [-1, 6, 8, 8, 8, 6] }, // topo
+      { label: "Eb", fingering: [-1, 6, 5, 3, 4, 3] }, // topo
       { label: "Bb", fingering: [-1, 1, 3, 3, 3, 1] }, // cima-direita
       { label: "Fm", fingering: [1, 3, 3, 1, 1, 1] }, // baixo-direita
       { label: "Cm", fingering: [-1, 3, 5, 5, 4, 3] }, // base
