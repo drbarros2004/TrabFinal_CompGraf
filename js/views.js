@@ -8,10 +8,17 @@ const VIOLAO_GEO = {
   x0:       44,             // início das cordas (nas tarraxas)
   x1:       965,            // fim das cordas (no cavalete)
   fbX0:     120,            // início da escala (pestana)
-  fbX1:     520,            // fim da escala (encontro com o corpo)
-  numFrets: 9,
+  fbX1:     688,            // fim da escala — estende sobre o corpo até a boca
+  scaleLen: 820,            // comprimento de escala (nut→cavalete) p/ espaçamento real
+  numFrets: 20,             // trastes desenhados; comprimem perto da boca
   fh:       37,             // meia-altura da escala/cabeça
 };
+
+// x do traste f no modo violão, com espaçamento REAL: os trastes comprimem
+// conforme se aproximam do corpo/boca. d(f) = S · (1 − 2^(−f/12)).
+function violaoFretX(f) {
+  return VIOLAO_GEO.fbX0 + VIOLAO_GEO.scaleLen * (1 - Math.pow(2, -f / 12));
+}
 
 const VIEWS = {
   // Modo atual — wrapper fino sobre as constantes existentes (pixel-idêntico).
@@ -21,6 +28,7 @@ const VIEWS = {
     stringX0:  NECK.xStart,
     stringX1:  NECK.xEnd,
     nutX:      NECK.xStart,
+    markerX:   NECK.xStart - 25,   // x dos marcadores × / ○ (à esquerda da pestana)
     fretX:     (f) => fretX(f),
     numFrets:  NUM_FRETS,
     ampScale:  1,
@@ -35,7 +43,8 @@ const VIEWS = {
     stringX0:  VIOLAO_GEO.x0,
     stringX1:  VIOLAO_GEO.x1,
     nutX:      VIOLAO_GEO.fbX0,
-    fretX:     (f) => VIOLAO_GEO.fbX0 + f * (VIOLAO_GEO.fbX1 - VIOLAO_GEO.fbX0) / VIOLAO_GEO.numFrets,
+    markerX:   VIOLAO_GEO.fbX0 + 18,  // × / ○ logo à direita da pestana (cabeça ocupa a esquerda)
+    fretX:     (f) => violaoFretX(f),
     numFrets:  VIOLAO_GEO.numFrets,
     ampScale:  ampScaleForSpacing(VIOLAO_GEO.span / 5), // 12/72 ≈ 0.167
     menuPos:   { cx: 200, cy: 110, r: 70, dotR: 6 },

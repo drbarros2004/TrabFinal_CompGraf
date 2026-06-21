@@ -3,18 +3,20 @@ const GuitarView = {
   // Pontos da silhueta do corpo, partilhados entre o traçado p5 e o path do canvas.
   _bodyPoints() {
     const cy = VIOLAO_GEO.cy;
-    // meia-alturas: junta do braço, bojo superior, cintura, bojo inferior
+    // Dreadnought: ombro superior largo, cintura suave, bojo inferior maior.
+    // O lado do braço (esquerda) é quase reto, mas levemente curvo — sem parede.
     return {
-      start: [520, cy - 68],
+      start: [515, cy - 95],
       curves: [
-        [560, cy - 90,  600, cy - 150, 660, cy - 150],  // bojo superior (topo)
-        [715, cy - 150, 735, cy - 120, 775, cy - 120],  // entra na cintura
-        [815, cy - 120, 850, cy - 190, 905, cy - 190],  // bojo inferior (topo)
-        [995, cy - 190, 1075, cy - 110, 1070, cy],       // arredonda até a ponta
-        [1075, cy + 110, 995, cy + 190, 905, cy + 190],  // bojo inferior (base)
-        [850, cy + 190, 815, cy + 120, 775, cy + 120],  // sai da cintura
-        [735, cy + 120, 715, cy + 150, 660, cy + 150],  // bojo superior (base)
-        [600, cy + 150, 560, cy + 90,  520, cy + 68],   // volta à junta do braço
+        [555, cy - 130, 600, cy - 156, 660, cy - 155],  // ombro → bojo superior (topo)
+        [710, cy - 150, 725, cy - 120, 740, cy - 120],  // entra na cintura (topo)
+        [775, cy - 120, 840, cy - 200, 905, cy - 200],  // bojo inferior (topo)
+        [1000, cy - 200, 1072, cy - 120, 1065, cy],      // arredonda até a ponta
+        [1072, cy + 120, 1000, cy + 200, 905, cy + 200], // bojo inferior (base)
+        [840, cy + 200, 775, cy + 120, 740, cy + 120],   // sai da cintura (base)
+        [725, cy + 120, 710, cy + 150, 660, cy + 155],   // bojo superior (base)
+        [600, cy + 156, 555, cy + 130, 515, cy + 95],    // → ombro inferior
+        [486, cy + 55, 486, cy - 55, 515, cy - 95],      // lado do braço: quase reto, curvo
       ],
     };
   },
@@ -91,14 +93,14 @@ const GuitarView = {
     ctx.save();
     this._traceBody(ctx);
     ctx.clip();
-    image(this._topTex(), 500, cy - 215, 600, 430);
+    image(this._topTex(), 480, cy - 215, 610, 430);
     // luz vinda de cima + sombra embaixo
     const g = ctx.createLinearGradient(0, cy - 205, 0, cy + 205);
     g.addColorStop(0,    'rgba(255,246,222,0.28)');
     g.addColorStop(0.45, 'rgba(255,255,255,0.0)');
     g.addColorStop(1,    'rgba(55,32,12,0.40)');
     ctx.fillStyle = g;
-    ctx.fillRect(500, cy - 215, 600, 430);
+    ctx.fillRect(480, cy - 215, 610, 430);
     ctx.restore();
 
     // contorno escuro + filete (binding) claro por dentro
@@ -174,19 +176,21 @@ const GuitarView = {
     strokeWeight(2);
     rect(x0, cy - VIOLAO_GEO.fh, x1 - x0, VIOLAO_GEO.fh * 2);
 
-    // trastes
+    // trastes (só os que cabem dentro da escala; comprimem perto da boca)
     stroke(202, 167, 102);
     strokeWeight(2);
     for (let f = 1; f <= VIOLAO_GEO.numFrets; f++) {
       const x = activeView.fretX(f);
+      if (x > x1) break;
       line(x, cy - VIOLAO_GEO.fh, x, cy + VIOLAO_GEO.fh);
     }
 
-    // marcadores de posição (casas 3, 5, 7)
+    // marcadores de posição (casas 3,5,7,9,12,15,17,19)
     noStroke();
     fill(231, 207, 154, 200);
-    [3, 5, 7].forEach((f) => {
-      ellipse(activeView.fretX(f - 0.5), cy, 8);
+    [3, 5, 7, 9, 12, 15, 17, 19].forEach((f) => {
+      const xm = activeView.fretX(f - 0.5);
+      if (xm <= x1) ellipse(xm, cy, 8);
     });
 
     // pestana (nut)
@@ -198,36 +202,51 @@ const GuitarView = {
 
   _drawHeadstock() {
     const cy = VIOLAO_GEO.cy;
+    const fh = VIOLAO_GEO.fh;
     push();
+
     // pá da cabeça (madeira escura), levemente flarada
-    fill(58, 36, 20);
-    stroke(28, 17, 8);
+    fill(46, 28, 15);
+    stroke(24, 14, 7);
     strokeWeight(2);
     beginShape();
-    vertex(118, cy - VIOLAO_GEO.fh * 0.95);
-    bezierVertex(90, cy - VIOLAO_GEO.fh, 60, cy - VIOLAO_GEO.fh, 38, cy - VIOLAO_GEO.fh * 0.92);
-    bezierVertex(24, cy - VIOLAO_GEO.fh * 0.86, 24, cy + VIOLAO_GEO.fh * 0.86, 38, cy + VIOLAO_GEO.fh * 0.92);
-    bezierVertex(60, cy + VIOLAO_GEO.fh, 90, cy + VIOLAO_GEO.fh, 118, cy + VIOLAO_GEO.fh * 0.95);
+    vertex(120, cy - fh + 2);
+    bezierVertex(96, cy - fh - 6, 44, cy - fh - 6, 22, cy - fh * 0.7);
+    bezierVertex(14, cy - fh * 0.45, 14, cy + fh * 0.45, 22, cy + fh * 0.7);
+    bezierVertex(44, cy + fh + 6, 96, cy + fh + 6, 120, cy + fh - 2);
     endShape(CLOSE);
 
-    // tarraxas: 3 de cada lado, cinza metálico
-    const pegYs = [cy - 22, cy, cy + 22];
-    for (const py of pegYs) {
-      for (const px of [55, 100]) {
-        fill(207, 210, 214);
-        stroke(125, 128, 133);
-        strokeWeight(1.5);
-        ellipse(px, py, 12);
+    // tarraxas: 3 em cima, 3 embaixo, com os botões (chaves) para fora
+    rectMode(CENTER);
+    for (const x of [50, 75, 100]) {
+      for (const dir of [-1, 1]) {        // -1 = topo, +1 = base
+        const postY = cy + dir * (fh - 13); // poste na face, perto da borda
+        const btnY  = cy + dir * (fh + 13); // botão além da borda (para fora)
+        // eixo ligando poste ao botão
+        stroke(120, 122, 126);
+        strokeWeight(3);
+        line(x, postY, x, btnY);
+        // poste metálico onde a corda enrola
+        noStroke();
+        fill(200, 202, 206);
+        ellipse(x, postY, 9, 9);
+        fill(120, 122, 126);
+        ellipse(x, postY, 4, 4);
+        // botão/chave para fora (creme)
+        stroke(70, 50, 30);
+        strokeWeight(1);
+        fill(232, 224, 205);
+        rect(x, btnY, 10, 16, 3);
       }
     }
     pop();
   },
 
   draw() {
-    this._drawHeadstock();
-    this._drawFretboard();
     this._drawBody();
     this._drawSoundhole();
+    this._drawHeadstock();
+    this._drawFretboard();  // por cima do corpo e da rosácea, até a boca
     this._drawBridge();
   },
 };

@@ -124,14 +124,14 @@ function _drawFingering() {
       fill(...COLORS.hint);
       textAlign(CENTER, CENTER);
       textSize(13);
-      text("×", activeView.nutX - 25, y);
+      text("×", activeView.markerX, y);
 
     } else if (f === 0) {
-      // Corda solta: círculo vazio à esquerda da pestana
+      // Corda solta: círculo vazio junto à pestana
       noFill();
       stroke(...COLORS.menuText);
       strokeWeight(1.5);
-      ellipse(activeView.nutX - 25, y, 9, 9);
+      ellipse(activeView.markerX, y, 9, 9);
 
     } else {
       // Corda pressionada: ponto laranja no centro do traste
