@@ -116,7 +116,7 @@ const GuitarView = {
   },
 
   _drawSoundhole() {
-    const cx = 795, cy = VIOLAO_GEO.cy, r = 72;
+    const cx = 770, cy = VIOLAO_GEO.cy, r = 72;
     push();
     // anel externo (madeira mais escura)
     noFill();
@@ -206,23 +206,23 @@ const GuitarView = {
     const nutX = VIOLAO_GEO.fbX0;
     const H = 58;                 // meia-altura da pá (maior → cordas saem para fora)
     const postY = 42;             // |Δy| do poste: além das cordas (span±30) → leque p/ fora
-    // poste de cada corda [x, dir]: cordas de cima → tarraxas da direita p/ esquerda
+    // postes relativos ao nut [x, dir]: cordas de cima → tarraxas da direita p/ esquerda
     // na linha de cima; cordas de baixo → da direita p/ esquerda na linha de baixo.
     const posts = [
-      [138, -1], [98, -1], [58, -1],   // cordas 1,2,3 (de cima)
-      [58,  1], [98,  1], [138,  1],   // cordas 4,5,6 (de baixo)
+      [nutX - 22, -1], [nutX - 60, -1], [nutX - 100, -1],   // cordas 1,2,3 (de cima)
+      [nutX - 100, 1], [nutX - 60,  1], [nutX - 22,  1],    // cordas 4,5,6 (de baixo)
     ];
     push();
 
-    // pá da cabeça (madeira escura), comprida e levemente flarada
+    // pá da cabeça (madeira escura), comprida e levemente flarada (relativa ao nut)
     fill(46, 28, 15);
     stroke(24, 14, 7);
     strokeWeight(2);
     beginShape();
     vertex(nutX, cy - H + 5);
-    bezierVertex(132, cy - H - 9, 56, cy - H - 9, 26, cy - H * 0.6);
-    bezierVertex(16, cy - H * 0.36, 16, cy + H * 0.36, 26, cy + H * 0.6);
-    bezierVertex(56, cy + H + 9, 132, cy + H + 9, nutX, cy + H - 5);
+    bezierVertex(nutX - 30, cy - H - 9, nutX - 95, cy - H - 9, nutX - 120, cy - H * 0.6);
+    bezierVertex(nutX - 130, cy - H * 0.36, nutX - 130, cy + H * 0.36, nutX - 120, cy + H * 0.6);
+    bezierVertex(nutX - 95, cy + H + 9, nutX - 30, cy + H + 9, nutX, cy + H - 5);
     endShape(CLOSE);
 
     // cordas: da pestana até o seu poste (em leque, como num violão real)

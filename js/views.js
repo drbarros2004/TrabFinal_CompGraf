@@ -7,8 +7,8 @@ const VIOLAO_GEO = {
   span:     60,             // distância vertical total das 6 cordas
   x0:       44,             // (legado) início da cabeça
   x1:       985,            // fim das cordas (nos pinos do cavalete)
-  fbX0:     160,            // início da escala (pestana) — deslocado p/ a direita
-  fbX1:     728,            // fim da escala — estende sobre o corpo até a boca
+  fbX0:     135,            // início da escala (pestana)
+  fbX1:     703,            // fim da escala — estende sobre o corpo até a boca
   scaleLen: 820,            // comprimento de escala (nut→cavalete) p/ espaçamento real
   numFrets: 20,             // trastes desenhados; comprimem perto da boca
   fh:       37,             // meia-altura da escala/cabeça
