@@ -5,6 +5,10 @@ const Strummer = {
   update(strings, activeChord) {
     if (!activeChord) return;  // roda custom vazia
 
+    // mouse em coordenadas lógicas do design (a tela é escalada para caber na janela)
+    const mX = lx(mouseX),  mY = ly(mouseY);
+    const pX = lx(pmouseX), pY = ly(pmouseY);
+
     for (let i = 0; i < 6; i++) {
       const y   = activeView.stringY(i);
       const now = millis();
@@ -12,8 +16,8 @@ const Strummer = {
       // Cruzamento do segmento de mouse com a linha horizontal da corda i,
       // dentro da extensão tocável da view ativa.
       const crossed =
-        ((pmouseY <= y && mouseY > y) || (pmouseY >= y && mouseY < y)) &&
-        mouseX >= activeView.stringX0 && mouseX <= activeView.stringX1;
+        ((pY <= y && mY > y) || (pY >= y && mY < y)) &&
+        mX >= activeView.stringX0 && mX <= activeView.stringX1;
 
       if (crossed && mouseIsPressed && now - this._lastTrigger[i] > STRUM_COOLDOWN_MS) {
         // Corda abafada (×) nunca soa nem vibra.
@@ -22,7 +26,7 @@ const Strummer = {
           continue;
         }
 
-        const dy  = abs(mouseY - pmouseY);
+        const dy  = abs(mY - pY);
         const vel = constrain(dy / 60, 0.15, 1.0);
         strings[i].pluck(vel);
 

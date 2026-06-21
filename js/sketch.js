@@ -6,8 +6,11 @@ let helpOpen = false;
 const HELP_BTN = { x: 30, y: 30, r: 15 };
 
 function setup() {
-  cnv = createCanvas(CANVAS_W, CANVAS_H);
+  cnv = createCanvas(windowWidth, windowHeight);
   textFont('monospace');
+  // o editor do p5 não carrega nosso style.css → garante tela cheia sem barras
+  document.body.style.margin = '0';
+  document.body.style.overflow = 'hidden';
 
   for (let i = 0; i < 6; i++) {
     strings.push(new GuitarString(i));
@@ -15,11 +18,30 @@ function setup() {
   menu = new RadialMenu();
 }
 
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+// Encaixe do design lógico (CANVAS_W×CANVAS_H) na janela, preservando proporção.
+function _fit() {
+  const s = Math.min(width / CANVAS_W, height / CANVAS_H);
+  return { s, x: (width - CANVAS_W * s) / 2, y: (height - CANVAS_H * s) / 2 };
+}
+// Mapeia o mouse (px da janela) para as coordenadas lógicas do design.
+function lx(px) { const f = _fit(); return (px - f.x) / f.s; }
+function ly(py) { const f = _fit(); return (py - f.y) / f.s; }
+
 function draw() {
-  background(...COLORS.bg);
+  background(...COLORS.bg);   // preenche a janela inteira (sem borda)
 
   // 1. Detectar strums (só quando o card de ajuda está fechado)
   if (!helpOpen) Strummer.update(strings, menu.getActiveChord());
+
+  // Encaixa o design lógico na janela (escala + centraliza, proporção mantida)
+  const f = _fit();
+  push();
+  translate(f.x, f.y);
+  scale(f.s);
 
   // 2. Desenhar o cenário da view ativa (braço simples OU violão inteiro)
   activeView.drawBackground();
@@ -43,6 +65,8 @@ function draw() {
   // 6. Ajuda
   _drawHelpButton();
   if (helpOpen) _drawHelpCard();
+
+  pop();
 }
 
 function keyPressed() {
@@ -69,7 +93,7 @@ function keyPressed() {
 
 function mousePressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
-  if (dist(mouseX, mouseY, HELP_BTN.x, HELP_BTN.y) <= HELP_BTN.r) {
+  if (dist(lx(mouseX), ly(mouseY), HELP_BTN.x, HELP_BTN.y) <= HELP_BTN.r) {
     helpOpen = !helpOpen;
     return;
   }
