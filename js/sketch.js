@@ -94,7 +94,7 @@ function _drawNeck() {
   noStroke();
   fill(45);
   const markerY = (NECK.yTop + NECK.yBot) / 2;
-  [3, 5].forEach(f => {
+  [3, 5, 7].forEach(f => {
     ellipse(fretX(f - 0.5), markerY, 10, 10);
   });
 
