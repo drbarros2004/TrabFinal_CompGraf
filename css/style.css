@@ -4,15 +4,14 @@
   box-sizing: border-box;
 }
 
-body {
-  background: #1a1a1a;
+html, body {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  background: #121212;
 }
 
+/* canvas em tela cheia, sem centralização (o sketch escala e centraliza o conteúdo) */
 canvas {
   display: block;
 }

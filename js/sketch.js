@@ -32,6 +32,10 @@ function lx(px) { const f = _fit(); return (px - f.x) / f.s; }
 function ly(py) { const f = _fit(); return (py - f.y) / f.s; }
 
 function draw() {
+  // re-encaixa se a janela do editor mudou de tamanho (ou só assentou após o load)
+  if (width !== windowWidth || height !== windowHeight) {
+    resizeCanvas(windowWidth, windowHeight);
+  }
   background(...COLORS.bg);   // preenche a janela inteira (sem borda)
 
   // 1. Detectar strums (só quando o card de ajuda está fechado)
