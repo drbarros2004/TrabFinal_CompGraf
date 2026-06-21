@@ -10,12 +10,12 @@ const GuitarView = {
       start: [550, cy - 100],
       curves: [
         [590, cy - 140, 640, cy - 172, 700, cy - 170],  // ombro → bojo superior (topo)
-        [745, cy - 168, 770, cy - 142, 788, cy - 142],  // entra na cintura (suave)
-        [812, cy - 142, 895, cy - 218, 965, cy - 218],  // sai da cintura → bojo inferior
+        [745, cy - 168, 770, cy - 150, 788, cy - 150],  // entra na cintura (mais suave)
+        [812, cy - 150, 895, cy - 218, 965, cy - 218],  // sai da cintura → bojo inferior
         [1065, cy - 218, 1138, cy - 128, 1132, cy],      // arredonda até a ponta
         [1138, cy + 128, 1065, cy + 218, 965, cy + 218], // bojo inferior (base)
-        [895, cy + 218, 812, cy + 142, 788, cy + 142],   // cintura (base, suave)
-        [770, cy + 142, 745, cy + 168, 700, cy + 170],   // → bojo superior (base)
+        [895, cy + 218, 812, cy + 150, 788, cy + 150],   // cintura (base, mais suave)
+        [770, cy + 150, 745, cy + 168, 700, cy + 170],   // → bojo superior (base)
         [640, cy + 172, 590, cy + 140, 550, cy + 100],   // → ombro inferior
         [516, cy + 58, 516, cy - 58, 550, cy - 100],     // lado do braço: quase reto, curvo
       ],
