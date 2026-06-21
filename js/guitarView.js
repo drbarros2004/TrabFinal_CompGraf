@@ -5,18 +5,19 @@ const GuitarView = {
     const cy = VIOLAO_GEO.cy;
     // Dreadnought: ombro superior largo, cintura suave, bojo inferior maior.
     // O lado do braço (esquerda) é quase reto, mas levemente curvo — sem parede.
+    // Cintura mais rasa e com tangente horizontal no vale → "buraco" mais suave.
     return {
-      start: [510, cy - 100],
+      start: [550, cy - 100],
       curves: [
-        [550, cy - 140, 595, cy - 172, 660, cy - 170],  // ombro → bojo superior (topo)
-        [715, cy - 165, 730, cy - 128, 748, cy - 128],  // entra na cintura (topo)
-        [785, cy - 128, 855, cy - 218, 925, cy - 218],  // bojo inferior (topo)
-        [1025, cy - 218, 1098, cy - 128, 1092, cy],      // arredonda até a ponta
-        [1098, cy + 128, 1025, cy + 218, 925, cy + 218], // bojo inferior (base)
-        [855, cy + 218, 785, cy + 128, 748, cy + 128],   // sai da cintura (base)
-        [730, cy + 128, 715, cy + 165, 660, cy + 170],   // bojo superior (base)
-        [595, cy + 172, 550, cy + 140, 510, cy + 100],   // → ombro inferior
-        [476, cy + 58, 476, cy - 58, 510, cy - 100],     // lado do braço: quase reto, curvo
+        [590, cy - 140, 640, cy - 172, 700, cy - 170],  // ombro → bojo superior (topo)
+        [745, cy - 168, 770, cy - 142, 788, cy - 142],  // entra na cintura (suave)
+        [812, cy - 142, 895, cy - 218, 965, cy - 218],  // sai da cintura → bojo inferior
+        [1065, cy - 218, 1138, cy - 128, 1132, cy],      // arredonda até a ponta
+        [1138, cy + 128, 1065, cy + 218, 965, cy + 218], // bojo inferior (base)
+        [895, cy + 218, 812, cy + 142, 788, cy + 142],   // cintura (base, suave)
+        [770, cy + 142, 745, cy + 168, 700, cy + 170],   // → bojo superior (base)
+        [640, cy + 172, 590, cy + 140, 550, cy + 100],   // → ombro inferior
+        [516, cy + 58, 516, cy - 58, 550, cy - 100],     // lado do braço: quase reto, curvo
       ],
     };
   },
@@ -93,14 +94,14 @@ const GuitarView = {
     ctx.save();
     this._traceBody(ctx);
     ctx.clip();
-    image(this._topTex(), 470, cy - 228, 632, 456);
+    image(this._topTex(), 508, cy - 228, 668, 456);
     // luz vinda de cima + sombra embaixo
     const g = ctx.createLinearGradient(0, cy - 228, 0, cy + 228);
     g.addColorStop(0,    'rgba(255,246,222,0.28)');
     g.addColorStop(0.45, 'rgba(255,255,255,0.0)');
     g.addColorStop(1,    'rgba(55,32,12,0.40)');
     ctx.fillStyle = g;
-    ctx.fillRect(470, cy - 228, 632, 456);
+    ctx.fillRect(508, cy - 228, 668, 456);
     ctx.restore();
 
     // contorno escuro + filete (binding) claro por dentro
@@ -115,7 +116,7 @@ const GuitarView = {
   },
 
   _drawSoundhole() {
-    const cx = 755, cy = VIOLAO_GEO.cy, r = 72;
+    const cx = 795, cy = VIOLAO_GEO.cy, r = 72;
     push();
     // anel externo (madeira mais escura)
     noFill();
@@ -141,7 +142,7 @@ const GuitarView = {
   },
 
   _drawBridge() {
-    const cy = VIOLAO_GEO.cy, bx = 945;
+    const cy = VIOLAO_GEO.cy, bx = VIOLAO_GEO.x1;  // nos pinos, onde as cordas terminam
     push();
     rectMode(CENTER);
     noStroke();
@@ -203,13 +204,13 @@ const GuitarView = {
   _drawHeadstock() {
     const cy = VIOLAO_GEO.cy;
     const nutX = VIOLAO_GEO.fbX0;
-    const H = 48;                 // meia-altura da pá (maior que a escala)
-    const postY = 26;             // |Δy| do poste em relação ao centro
+    const H = 58;                 // meia-altura da pá (maior → cordas saem para fora)
+    const postY = 42;             // |Δy| do poste: além das cordas (span±30) → leque p/ fora
     // poste de cada corda [x, dir]: cordas de cima → tarraxas da direita p/ esquerda
     // na linha de cima; cordas de baixo → da direita p/ esquerda na linha de baixo.
     const posts = [
-      [98, -1], [66, -1], [34, -1],   // cordas 1,2,3 (de cima)
-      [34,  1], [66,  1], [98,  1],   // cordas 4,5,6 (de baixo)
+      [138, -1], [98, -1], [58, -1],   // cordas 1,2,3 (de cima)
+      [58,  1], [98,  1], [138,  1],   // cordas 4,5,6 (de baixo)
     ];
     push();
 
@@ -218,10 +219,10 @@ const GuitarView = {
     stroke(24, 14, 7);
     strokeWeight(2);
     beginShape();
-    vertex(nutX, cy - H + 4);
-    bezierVertex(96, cy - H - 8, 34, cy - H - 8, 10, cy - H * 0.62);
-    bezierVertex(3, cy - H * 0.38, 3, cy + H * 0.38, 10, cy + H * 0.62);
-    bezierVertex(34, cy + H + 8, 96, cy + H + 8, nutX, cy + H - 4);
+    vertex(nutX, cy - H + 5);
+    bezierVertex(132, cy - H - 9, 56, cy - H - 9, 26, cy - H * 0.6);
+    bezierVertex(16, cy - H * 0.36, 16, cy + H * 0.36, 26, cy + H * 0.6);
+    bezierVertex(56, cy + H + 9, 132, cy + H + 9, nutX, cy + H - 5);
     endShape(CLOSE);
 
     // cordas: da pestana até o seu poste (em leque, como num violão real)
