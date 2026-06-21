@@ -69,8 +69,7 @@ const GuitarView = {
   },
 
   _topTex() {
-    // madeira mais escura → mais contraste com as cordas douradas por cima
-    if (!this._tex) this._tex = this._makeWoodTexture(640, 456, [150, 106, 60], [96, 64, 32]);
+    if (!this._tex) this._tex = this._makeWoodTexture(640, 456, [216, 170, 110], [150, 100, 55]);
     return this._tex;
   },
 
@@ -97,9 +96,9 @@ const GuitarView = {
     image(this._topTex(), 470, cy - 228, 632, 456);
     // luz vinda de cima + sombra embaixo
     const g = ctx.createLinearGradient(0, cy - 228, 0, cy + 228);
-    g.addColorStop(0,    'rgba(255,240,210,0.22)');
+    g.addColorStop(0,    'rgba(255,246,222,0.28)');
     g.addColorStop(0.45, 'rgba(255,255,255,0.0)');
-    g.addColorStop(1,    'rgba(40,24,9,0.45)');
+    g.addColorStop(1,    'rgba(55,32,12,0.40)');
     ctx.fillStyle = g;
     ctx.fillRect(470, cy - 228, 632, 456);
     ctx.restore();
@@ -147,18 +146,18 @@ const GuitarView = {
     rectMode(CENTER);
     noStroke();
 
-    // bloco marrom com os 6 pinos (um pouco mais comprido que o rastilho)
-    const blockW = 26, blockX = bx;
+    // bloco marrom com os 6 pinos (proporcionalmente maior que o rastilho)
+    const blockW = 32, blockX = bx;
     fill(30, 18, 9);
-    rect(blockX, cy, blockW, 92, 3);
+    rect(blockX, cy, blockW, 116, 3);
     fill(216, 206, 186);
-    for (let i = 0; i < 6; i++) ellipse(blockX, activeView.stringY(i), 5.5);
+    for (let i = 0; i < 6; i++) ellipse(blockX, activeView.stringY(i), 6);
 
     // rastilho (saddle) claro, colado à esquerda do bloco (lado da boca)
-    const saddleW = 6;
+    const saddleW = 8;
     const saddleX = blockX - blockW / 2 - saddleW / 2;  // encostado no bloco
     fill(228, 219, 199);
-    rect(saddleX, cy, saddleW, 72, 1);
+    rect(saddleX, cy, saddleW, 84, 1);
     pop();
   },
 
@@ -206,10 +205,11 @@ const GuitarView = {
     const nutX = VIOLAO_GEO.fbX0;
     const H = 48;                 // meia-altura da pá (maior que a escala)
     const postY = 26;             // |Δy| do poste em relação ao centro
-    // poste de cada corda: [x, dir] — graves (0,1,2) em cima, agudos (3,4,5) embaixo
+    // poste de cada corda [x, dir]: cordas de cima → tarraxas da direita p/ esquerda
+    // na linha de cima; cordas de baixo → da direita p/ esquerda na linha de baixo.
     const posts = [
-      [34, -1], [66, -1], [98, -1],   // E A D
-      [98,  1], [66,  1], [34,  1],   // G B e
+      [98, -1], [66, -1], [34, -1],   // cordas 1,2,3 (de cima)
+      [34,  1], [66,  1], [98,  1],   // cordas 4,5,6 (de baixo)
     ];
     push();
 
@@ -225,10 +225,12 @@ const GuitarView = {
     endShape(CLOSE);
 
     // cordas: da pestana até o seu poste (em leque, como num violão real)
-    stroke(...COLORS.string);
+    const frets = (typeof menu !== 'undefined' && menu) ? menu.getActiveFingering() : null;
     strokeWeight(1.6);
     for (let i = 0; i < 6; i++) {
       const [px, dir] = posts[i];
+      const muted = frets && frets[i] < 0;
+      stroke(...(muted ? COLORS.stringMuted : COLORS.string));
       line(nutX, activeView.stringY(i), px, cy + dir * postY);
     }
 

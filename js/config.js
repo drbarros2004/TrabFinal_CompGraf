@@ -7,6 +7,7 @@ const COLORS = {
   bg:           [18,  18,  18],   // fundo quase preto
   string:       [180, 155, 110],  // cordas: dourado envelhecido
   stringActive: [255, 210, 100],  // corda tocada: amarelo quente
+  stringMuted:  [112, 108, 99],   // corda abafada (vista violão): acinzentada
   menuRing:     [60,  60,  60],   // anel do menu radial
   menuActive:   [200, 130, 60],   // acorde ativo: laranja
   menuText:     [220, 210, 195],  // texto do menu
@@ -47,7 +48,7 @@ const STRUM_COOLDOWN_MS = 70;        // ms mínimos entre dois toques na mesma c
 // ─── Áudio ─────────────────────────────────────────────────────────────────
 const AUDIO = {
   minDb: -12,    // volume mínimo (movimento lento)
-  maxDb:  0,     // volume máximo (movimento rápido)
+  maxDb:  -8,     // volume máximo (movimento rápido)
   releaseSec: 2, // fade ao trocar de acorde: dissipa em vez de cortar seco
 };
 

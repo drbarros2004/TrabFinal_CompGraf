@@ -119,25 +119,30 @@ function _drawFingering() {
     const y = activeView.stringY(i);
 
     if (f === -1) {
-      // Corda abafada: × à esquerda da pestana
-      noStroke();
-      fill(...COLORS.hint);
-      textAlign(CENTER, CENTER);
-      textSize(13);
-      text("×", activeView.markerX, y);
+      // Corda abafada: × à esquerda da pestana (só onde as marcas são mostradas)
+      if (activeView.showStringMarks) {
+        noStroke();
+        fill(...COLORS.hint);
+        textAlign(CENTER, CENTER);
+        textSize(13);
+        text("×", activeView.markerX, y);
+      }
 
     } else if (f === 0) {
-      // Corda solta: círculo vazio junto à pestana
-      noFill();
-      stroke(...COLORS.menuText);
-      strokeWeight(1.5);
-      ellipse(activeView.markerX, y, 9, 9);
+      // Corda solta: círculo vazio junto à pestana (só onde as marcas são mostradas)
+      if (activeView.showStringMarks) {
+        noFill();
+        stroke(...COLORS.menuText);
+        strokeWeight(1.5);
+        ellipse(activeView.markerX, y, 9, 9);
+      }
 
     } else {
       // Corda pressionada: ponto laranja no centro do traste
       noStroke();
       fill(...COLORS.menuActive);
-      ellipse(activeView.fretX(f - 0.5), y, 20, 20);
+      const d = activeView.fingerDotD;
+      ellipse(activeView.fretX(f - 0.5), y, d, d);
     }
   }
   pop();

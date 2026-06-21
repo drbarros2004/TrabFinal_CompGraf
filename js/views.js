@@ -29,6 +29,8 @@ const VIEWS = {
     stringX1:  NECK.xEnd,
     nutX:      NECK.xStart,
     markerX:   NECK.xStart - 25,   // x dos marcadores × / ○ (à esquerda da pestana)
+    showStringMarks: true,         // mostra × (abafada) e ○ (solta)
+    fingerDotD: 20,                // diâmetro da bolinha de digitação
     fretX:     (f) => fretX(f),
     numFrets:  NUM_FRETS,
     ampScale:  1,
@@ -43,7 +45,9 @@ const VIEWS = {
     stringX0:  VIOLAO_GEO.fbX0,   // corda vibrante começa na pestana; cabeça desenha o resto
     stringX1:  VIOLAO_GEO.x1,
     nutX:      VIOLAO_GEO.fbX0,
-    markerX:   VIOLAO_GEO.fbX0 + 18,  // × / ○ logo à direita da pestana (cabeça ocupa a esquerda)
+    markerX:   VIOLAO_GEO.fbX0 + 18,  // (não usado: marcas ocultas nesta view)
+    showStringMarks: false,           // sem × / ○; abafadas ficam acinzentadas
+    fingerDotD: 15,                   // bolinhas menores nesta view
     fretX:     (f) => violaoFretX(f),
     numFrets:  VIOLAO_GEO.numFrets,
     ampScale:  ampScaleForSpacing(VIOLAO_GEO.span / 5), // 12/72 ≈ 0.167

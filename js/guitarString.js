@@ -34,7 +34,9 @@ class GuitarString {
     strokeWeight(STRING_WIDTHS[this.index]);
 
     if (!this.isRinging) {
-      stroke(...COLORS.string);
+      // corda abafada (fret < 0) fica acinzentada onde as marcas × não aparecem
+      const muted = fret < 0 && !activeView.showStringMarks;
+      stroke(...(muted ? COLORS.stringMuted : COLORS.string));
       line(x0, y, x1, y);
       return;
     }
