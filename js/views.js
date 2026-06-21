@@ -5,8 +5,8 @@
 const VIOLAO_GEO = {
   cy:       300,            // linha central das cordas
   span:     60,             // distância vertical total das 6 cordas
-  x0:       44,             // início das cordas (nas tarraxas)
-  x1:       965,            // fim das cordas (no cavalete)
+  x0:       44,             // (legado) início da cabeça
+  x1:       945,            // fim das cordas (nos pinos do cavalete)
   fbX0:     120,            // início da escala (pestana)
   fbX1:     688,            // fim da escala — estende sobre o corpo até a boca
   scaleLen: 820,            // comprimento de escala (nut→cavalete) p/ espaçamento real
@@ -40,7 +40,7 @@ const VIEWS = {
   violao: {
     name:      "violao",
     stringY:   (i) => VIOLAO_GEO.cy - VIOLAO_GEO.span / 2 + i * (VIOLAO_GEO.span / 5),
-    stringX0:  VIOLAO_GEO.x0,
+    stringX0:  VIOLAO_GEO.fbX0,   // corda vibrante começa na pestana; cabeça desenha o resto
     stringX1:  VIOLAO_GEO.x1,
     nutX:      VIOLAO_GEO.fbX0,
     markerX:   VIOLAO_GEO.fbX0 + 18,  // × / ○ logo à direita da pestana (cabeça ocupa a esquerda)
