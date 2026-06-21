@@ -51,10 +51,12 @@ function keyPressed() {
   if (key === 'h' || key === 'H' || key === '?') { helpOpen = !helpOpen; return; }
   if (keyCode === ESCAPE) { helpOpen = false; return; }
 
-  if (keyCode === LEFT_ARROW)  menu.navigate(-1);
-  if (keyCode === RIGHT_ARROW) menu.navigate(+1);
-  if (keyCode === UP_ARROW)    menu.navigateWheel(-1);
-  if (keyCode === DOWN_ARROW)  menu.navigateWheel(+1);
+  // Setas ou WASD (W=cima, A=esquerda, S=baixo, D=direita)
+  const k = (key || '').toLowerCase();
+  if (keyCode === LEFT_ARROW  || k === 'a') menu.navigate(-1);
+  if (keyCode === RIGHT_ARROW || k === 'd') menu.navigate(+1);
+  if (keyCode === UP_ARROW    || k === 'w') menu.navigateWheel(-1);
+  if (keyCode === DOWN_ARROW  || k === 's') menu.navigateWheel(+1);
 
   if (key === 'v' || key === 'V') {
     activeView = (activeView === VIEWS.braco) ? VIEWS.violao : VIEWS.braco;
