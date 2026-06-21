@@ -28,7 +28,6 @@ class GuitarString {
     const x0 = activeView.stringX0;
     const x1 = activeView.stringX1;
     // corda solta (0) ou abafada: vibra do início; presa: vibra a partir do dedo
-    // (centro da casa, onde a bolinha é desenhada) — fica melhor visualmente
     const xStart = fret > 0 ? activeView.fretX(fret - 0.5) : x0;
 
     strokeWeight(STRING_WIDTHS[this.index]);

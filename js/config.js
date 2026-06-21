@@ -41,9 +41,9 @@ const STRING_PHYSICS = [
   { lambda: 4.5, omega: 18 },   // corda 1 (E4) — mais rápida/fina
 ];
 
-const STRING_VERTICES = 60;          // nº de vértices internos p/ suavidade
+const STRING_VERTICES = 60;           // nº de vértices internos p/ suavidade
 const AMPLITUDE_REST_THRESHOLD = 0.5; // px abaixo do qual a corda "repousa"
-const STRUM_COOLDOWN_MS = 70;        // ms mínimos entre dois toques na mesma corda
+const STRUM_COOLDOWN_MS = 70;         // ms mínimos entre dois toques na mesma corda
 
 // ─── Áudio ─────────────────────────────────────────────────────────────────
 const AUDIO = {
