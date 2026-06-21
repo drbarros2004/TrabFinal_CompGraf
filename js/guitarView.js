@@ -3,9 +3,6 @@ const GuitarView = {
   // Pontos da silhueta do corpo, partilhados entre o traçado p5 e o path do canvas.
   _bodyPoints() {
     const cy = VIOLAO_GEO.cy;
-    // Dreadnought: ombro superior largo, cintura suave, bojo inferior maior.
-    // O lado do braço (esquerda) é quase reto, mas levemente curvo — sem parede.
-    // Cintura mais rasa e com tangente horizontal no vale → "buraco" mais suave.
     return {
       start: [578, cy - 100],
       curves: [
