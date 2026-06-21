@@ -63,7 +63,7 @@ const RADIAL = {
 // ─── Indicador de rodas (dots abaixo do menu radial) ─────────────────────────
 const WHEEL_DOTS = {
   gap:        18,   // espaçamento horizontal entre dots
-  yOffset:    28,   // distância abaixo da borda inferior do anel
+  yOffset:    46,   // distância abaixo da borda inferior do anel (folga p/ o rótulo de baixo)
   rActive:    7,    // raio do dot da roda ativa
   rInactive:  4,    // raio dos demais
 };

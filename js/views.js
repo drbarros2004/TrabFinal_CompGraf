@@ -51,7 +51,7 @@ const VIEWS = {
     fretX:     (f) => violaoFretX(f),
     numFrets:  VIOLAO_GEO.numFrets,
     ampScale:  ampScaleForSpacing(VIOLAO_GEO.span / 5), // 12/72 ≈ 0.167
-    menuPos:   { cx: 200, cy: 110, r: 70, dotR: 6 },
+    menuPos:   { cx: 330, cy: 110, r: 70, dotR: 6 },
     drawBackground: () => GuitarView.draw(),  // GuitarView definido em guitarView.js
   },
 };
