@@ -113,7 +113,7 @@ const GuitarView = {
   },
 
   _drawSoundhole() {
-    const cx = 855, cy = VIOLAO_GEO.cy, r = 75;
+    const cx = 755, cy = VIOLAO_GEO.cy, r = 75;
     push();
     // anel externo (madeira mais escura)
     noFill();
