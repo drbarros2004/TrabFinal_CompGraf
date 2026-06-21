@@ -79,8 +79,8 @@ function mousePressed() {
 // Scroll do mouse troca de roda: cima = próxima, baixo = anterior.
 function mouseWheel(event) {
   AudioEngine.init();
-  if (event.delta < 0) menu.navigateWheel(+1);      // scroll p/ cima → próxima roda
-  else if (event.delta > 0) menu.navigateWheel(-1); // scroll p/ baixo → roda anterior
+  if (event.delta < 0) menu.navigateWheel(-1);      // scroll p/ cima → próxima roda
+  else if (event.delta > 0) menu.navigateWheel(+1); // scroll p/ baixo → roda anterior
   AudioEngine.reconcile(menu.getActiveFingering());
   return false; // evita rolar a página
 }
