@@ -29,9 +29,8 @@ class RadialMenu {
     this.wheelIndex = (this.wheelIndex + dir + WHEELS.length) % WHEELS.length;
   }
 
-  selectByNumber(n) {                // teclas 1..9
-    const w = this.getActiveWheel();
-    if (n >= 1 && n <= w.chords.length) this.chordIndex[this.wheelIndex] = n - 1;
+  selectWheel(n) {                   // teclas 1..6 : troca direta de roda
+    if (n >= 1 && n <= WHEELS.length) this.wheelIndex = n - 1;
   }
 
 
