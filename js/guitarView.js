@@ -7,17 +7,17 @@ const GuitarView = {
     // O lado do braço (esquerda) é quase reto, mas levemente curvo — sem parede.
     // Cintura mais rasa e com tangente horizontal no vale → "buraco" mais suave.
     return {
-      start: [550, cy - 100],
+      start: [578, cy - 100],
       curves: [
-        [590, cy - 140, 640, cy - 172, 700, cy - 170],  // ombro → bojo superior (topo)
-        [745, cy - 168, 770, cy - 150, 788, cy - 150],  // entra na cintura (mais suave)
-        [812, cy - 150, 895, cy - 218, 965, cy - 218],  // sai da cintura → bojo inferior
-        [1065, cy - 218, 1138, cy - 128, 1132, cy],      // arredonda até a ponta
-        [1138, cy + 128, 1065, cy + 218, 965, cy + 218], // bojo inferior (base)
-        [895, cy + 218, 812, cy + 150, 788, cy + 150],   // cintura (base, mais suave)
-        [770, cy + 150, 745, cy + 168, 700, cy + 170],   // → bojo superior (base)
-        [640, cy + 172, 590, cy + 140, 550, cy + 100],   // → ombro inferior
-        [516, cy + 58, 516, cy - 58, 550, cy - 100],     // lado do braço: quase reto, curvo
+        [618, cy - 140, 668, cy - 172, 728, cy - 170],  // ombro → bojo superior (topo)
+        [773, cy - 168, 798, cy - 150, 816, cy - 150],  // entra na cintura (mais suave)
+        [840, cy - 150, 923, cy - 218, 993, cy - 218],  // sai da cintura → bojo inferior
+        [1093, cy - 218, 1166, cy - 128, 1160, cy],      // arredonda até a ponta
+        [1166, cy + 128, 1093, cy + 218, 993, cy + 218], // bojo inferior (base)
+        [923, cy + 218, 840, cy + 150, 816, cy + 150],   // cintura (base, mais suave)
+        [798, cy + 150, 773, cy + 168, 728, cy + 170],   // → bojo superior (base)
+        [668, cy + 172, 618, cy + 140, 578, cy + 100],   // → ombro inferior
+        [544, cy + 58, 544, cy - 58, 578, cy - 100],     // lado do braço: quase reto, curvo
       ],
     };
   },
@@ -94,14 +94,14 @@ const GuitarView = {
     ctx.save();
     this._traceBody(ctx);
     ctx.clip();
-    image(this._topTex(), 508, cy - 228, 668, 456);
+    image(this._topTex(), 536, cy - 228, 668, 456);
     // luz vinda de cima + sombra embaixo
     const g = ctx.createLinearGradient(0, cy - 228, 0, cy + 228);
     g.addColorStop(0,    'rgba(255,246,222,0.28)');
     g.addColorStop(0.45, 'rgba(255,255,255,0.0)');
     g.addColorStop(1,    'rgba(55,32,12,0.40)');
     ctx.fillStyle = g;
-    ctx.fillRect(508, cy - 228, 668, 456);
+    ctx.fillRect(536, cy - 228, 668, 456);
     ctx.restore();
 
     // contorno escuro + filete (binding) claro por dentro
@@ -116,7 +116,7 @@ const GuitarView = {
   },
 
   _drawSoundhole() {
-    const cx = 770, cy = VIOLAO_GEO.cy, r = 72;
+    const cx = 798, cy = VIOLAO_GEO.cy, r = 72;
     push();
     // anel externo (madeira mais escura)
     noFill();

@@ -3,7 +3,7 @@ let strings   = [];
 let menu;
 let cnv;
 let helpOpen = false;
-const HELP_BTN = { x: 30, y: 30, r: 15 };
+const HELP_BTN = { x: 58, y: 30, r: 15 };
 
 function setup() {
   cnv = createCanvas(windowWidth, windowHeight);
