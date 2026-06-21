@@ -1,9 +1,12 @@
 // ─── sketch.js — orquestração principal ─────────────────────────────────────
 let strings   = [];
 let menu;
+let cnv;
+let helpOpen = false;
+const HELP_BTN = { x: 30, y: 30, r: 15 };
 
 function setup() {
-  createCanvas(CANVAS_W, CANVAS_H);
+  cnv = createCanvas(CANVAS_W, CANVAS_H);
   textFont('monospace');
 
   for (let i = 0; i < 6; i++) {
@@ -15,43 +18,71 @@ function setup() {
 function draw() {
   background(...COLORS.bg);
 
-  // 1. Detectar strums (atualiza física + dispara áudio)
-  Strummer.update(strings, menu.getActiveChord());
+  // 1. Detectar strums (só quando o card de ajuda está fechado)
+  if (!helpOpen) Strummer.update(strings, menu.getActiveChord());
 
   // 2. Desenhar o cenário da view ativa (braço simples OU violão inteiro)
   activeView.drawBackground();
 
   // 3. Desenhar cada corda
-  for (const s of strings) {
-    s.update();
-    s.draw();
+  const frets = menu.getActiveFingering();
+  for (let i = 0; i < strings.length; i++) {
+    strings[i].update();
+    strings[i].draw(frets ? frets[i] : 0);
   }
 
-  // 3.5. Desenhar dedilhado (pontos de dedo)
+  // 3.5. Dedilhado do acorde ativo
   _drawFingering();
 
   // 4. Menu radial
   menu.draw();
 
-  // 4.5. Botão de alternância de view
-  ToggleButton.draw();
-
   // 5. HUD / dicas
   _drawHUD();
+
+  // 6. Ajuda
+  _drawHelpButton();
+  if (helpOpen) _drawHelpCard();
 }
 
 function keyPressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
 
-  if (keyCode === LEFT_ARROW)  menu.navigate(-1);
-  if (keyCode === RIGHT_ARROW) menu.navigate(+1);
-  const n = int(key);
-  if (!isNaN(n)) menu.selectByNumber(n);
+  if (key === 'h' || key === 'H' || key === '?') { helpOpen = !helpOpen; return; }
+  if (keyCode === ESCAPE) { helpOpen = false; return; }
+
+  // Setas ou WASD (W=cima, A=esquerda, S=baixo, D=direita)
+  const k = (key || '').toLowerCase();
+  if (keyCode === LEFT_ARROW  || k === 'a') menu.navigate(-1);
+  if (keyCode === RIGHT_ARROW || k === 'd') menu.navigate(+1);
+  if (keyCode === UP_ARROW    || k === 'w') menu.navigateWheel(-1);
+  if (keyCode === DOWN_ARROW  || k === 's') menu.navigateWheel(+1);
+
+  if (key === 'v' || key === 'V') {
+    activeView = (activeView === VIEWS.braco) ? VIEWS.violao : VIEWS.braco;
+  }
+  if (key >= '1' && key <= '9') menu.selectByNumber(int(key));
+
+  // Troca de acorde: silencia só as notas que mudaram
+  AudioEngine.reconcile(menu.getActiveFingering());
 }
 
 function mousePressed() {
   AudioEngine.init(); // libera áudio no primeiro gesto
-  ToggleButton.handleClick(mouseX, mouseY); // troca de view se clicar no botão
+  if (dist(mouseX, mouseY, HELP_BTN.x, HELP_BTN.y) <= HELP_BTN.r) {
+    helpOpen = !helpOpen;
+    return;
+  }
+  if (helpOpen) helpOpen = false; // clique fora fecha (sem tocar corda)
+}
+
+// Scroll do mouse troca de roda: cima = próxima, baixo = anterior.
+function mouseWheel(event) {
+  AudioEngine.init();
+  if (event.delta < 0) menu.navigateWheel(-1);      // scroll p/ cima → próxima roda
+  else if (event.delta > 0) menu.navigateWheel(+1); // scroll p/ baixo → roda anterior
+  AudioEngine.reconcile(menu.getActiveFingering());
+  return false; // evita rolar a página
 }
 
 // ─── Helpers de render ───────────────────────────────────────────────────────
@@ -74,7 +105,7 @@ function _drawNeck() {
   noStroke();
   fill(45);
   const markerY = (NECK.yTop + NECK.yBot) / 2;
-  [3, 5].forEach(f => {
+  [3, 5, 7].forEach(f => {
     ellipse(fretX(f - 0.5), markerY, 10, 10);
   });
 
@@ -90,8 +121,8 @@ function _drawNeck() {
 }
 
 function _drawFingering() {
-  const activeKey = CHORD_ORDER[menu.activeIndex];
-  const frets     = FINGERINGS[activeKey];
+  const frets = menu.getActiveFingering();
+  if (!frets) return;   // roda custom vazia
 
   push();
   for (let i = 0; i < 6; i++) {
@@ -99,25 +130,30 @@ function _drawFingering() {
     const y = activeView.stringY(i);
 
     if (f === -1) {
-      // Corda abafada: × à esquerda da pestana
-      noStroke();
-      fill(...COLORS.hint);
-      textAlign(CENTER, CENTER);
-      textSize(13);
-      text("×", activeView.nutX - 25, y);
+      // Corda abafada: × à esquerda da pestana (só onde as marcas são mostradas)
+      if (activeView.showStringMarks) {
+        noStroke();
+        fill(...COLORS.hint);
+        textAlign(CENTER, CENTER);
+        textSize(13);
+        text("×", activeView.markerX, y);
+      }
 
     } else if (f === 0) {
-      // Corda solta: círculo vazio à esquerda da pestana
-      noFill();
-      stroke(...COLORS.menuText);
-      strokeWeight(1.5);
-      ellipse(activeView.nutX - 25, y, 9, 9);
+      // Corda solta: círculo vazio junto à pestana (só onde as marcas são mostradas)
+      if (activeView.showStringMarks) {
+        noFill();
+        stroke(...COLORS.menuText);
+        strokeWeight(1.5);
+        ellipse(activeView.markerX, y, 9, 9);
+      }
 
     } else {
       // Corda pressionada: ponto laranja no centro do traste
       noStroke();
       fill(...COLORS.menuActive);
-      ellipse(activeView.fretX(f - 0.5), y, 14, 14);
+      const d = activeView.fingerDotD;
+      ellipse(activeView.fretX(f - 0.5), y, d, d);
     }
   }
   pop();
@@ -135,7 +171,72 @@ function _drawHUD() {
     text("Carregando samples de áudio...", NECK.xStart, CANVAS_H - 14);
   } else {
     fill(...COLORS.hint);
-    text("← → ou 1-7: trocar acorde   |   Clique + arraste nas cordas: strum   |   Botão: trocar vista", NECK.xStart, CANVAS_H - 14);
+    text("?: ajuda   |   ← → / 1-6: acorde   |   ↑ ↓: roda   |   V: braço/violão   |   arraste nas cordas: tocar",
+         NECK.xStart, CANVAS_H - 14);
   }
+  pop();
+}
+
+function _drawHelpButton() {
+  push();
+  noFill();
+  stroke(...COLORS.hint);
+  strokeWeight(1.5);
+  ellipse(HELP_BTN.x, HELP_BTN.y, HELP_BTN.r * 2);
+  noStroke();
+  fill(...COLORS.hint);
+  textAlign(CENTER, CENTER);
+  textSize(16);
+  text("?", HELP_BTN.x, HELP_BTN.y - 1);
+  pop();
+}
+
+function _drawHelpCard() {
+  push();
+  // escurece o fundo
+  noStroke();
+  fill(10, 10, 10, 205);
+  rect(0, 0, CANVAS_W, CANVAS_H);
+
+  // painel central
+  const w = 580, h = 300;
+  const x = (CANVAS_W - w) / 2, y = (CANVAS_H - h) / 2;
+  fill(28, 28, 28);
+  stroke(...COLORS.menuActive);
+  strokeWeight(1.5);
+  rect(x, y, w, h, 12);
+
+  // título
+  noStroke();
+  textAlign(CENTER, TOP);
+  fill(...COLORS.menuActive);
+  textSize(22);
+  textStyle(BOLD);
+  text("Simulador de Violão", CANVAS_W / 2, y + 26);
+  textStyle(NORMAL);
+
+  // o que é
+  fill(...COLORS.menuText);
+  textAlign(LEFT, TOP);
+  textSize(14);
+  const tx = x + 40;
+  let ty = y + 74;
+  text("Toque os acordes do campo harmônico e veja", tx, ty); ty += 22;
+  text("(e ouça) as cordas vibrarem.", tx, ty); ty += 38;
+
+  // como jogar
+  fill(...COLORS.hint); textSize(12);
+  text("COMO JOGAR", tx, ty); ty += 24;
+  fill(...COLORS.menuText); textSize(14);
+  const lh = 28;
+  text("← →  ou  1-6    trocar de acorde", tx, ty); ty += lh;
+  text("↑ ↓             trocar de campo (roda)", tx, ty); ty += lh;
+  text("V               alterna braço / violão", tx, ty); ty += lh;
+  text("arraste o mouse sobre as cordas para tocar", tx, ty);
+
+  // rodapé
+  fill(...COLORS.hint); textSize(12);
+  textAlign(CENTER, TOP);
+  text("clique em qualquer lugar ou Esc para fechar", CANVAS_W / 2, y + h - 28);
   pop();
 }

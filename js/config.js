@@ -2,13 +2,14 @@
 const CANVAS_W = 1200;
 const CANVAS_H = 600;
 
-// ─── Paleta (inspirada em TLOU2 — tons escuros com acento cálido) ───────────
+// ─── Paleta — tons escuros com acento cálido ───────────
 const COLORS = {
   bg:           [18,  18,  18],   // fundo quase preto
   string:       [180, 155, 110],  // cordas: dourado envelhecido
   stringActive: [255, 210, 100],  // corda tocada: amarelo quente
+  stringMuted:  [112, 108, 99],   // corda abafada (vista violão): acinzentada
   menuRing:     [60,  60,  60],   // anel do menu radial
-  menuActive:   [200, 130, 60],   // acorde ativo: laranja TLOU
+  menuActive:   [200, 130, 60],   // acorde ativo: laranja
   menuText:     [220, 210, 195],  // texto do menu
   hint:         [100, 100, 100],  // texto auxiliar
 };
@@ -46,8 +47,9 @@ const STRUM_COOLDOWN_MS = 70;        // ms mínimos entre dois toques na mesma c
 
 // ─── Áudio ─────────────────────────────────────────────────────────────────
 const AUDIO = {
-  minDb: -12, // volume mínimo (movimento lento)
-  maxDb:  0,  // volume máximo (movimento rápido)
+  minDb: -12,    // volume mínimo (movimento lento)
+  maxDb:  -8,     // volume máximo (movimento rápido)
+  releaseSec: 2, // fade ao trocar de acorde: dissipa em vez de cortar seco
 };
 
 // ─── Menu radial ────────────────────────────────────────────────────────────
@@ -58,8 +60,16 @@ const RADIAL = {
   dotR:   6,    // raio dos pontos
 };
 
+// ─── Indicador de rodas (dots abaixo do menu radial) ─────────────────────────
+const WHEEL_DOTS = {
+  gap:        18,   // espaçamento horizontal entre dots
+  yOffset:    46,   // distância abaixo da borda inferior do anel (folga p/ o rótulo de baixo)
+  rActive:    7,    // raio do dot da roda ativa
+  rInactive:  4,    // raio dos demais
+};
+
 // ─── Braço — trastes ────────────────────────────────────────────────────────
-const NUM_FRETS    = 7;
+const NUM_FRETS    = 8;
 const STRING_NAMES = ["E", "A", "D", "G", "B", "E"]; // índice 0 = corda 6 (E2)
 
 // x do traste f (0 = nut, NUM_FRETS = bridge); aceita float para posição intermédia
