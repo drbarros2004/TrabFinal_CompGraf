@@ -1,12 +1,11 @@
 // ─── sketch.js — orquestração principal ─────────────────────────────────────
 let strings   = [];
 let menu;
-let cnv;
 let helpOpen = false;
 const HELP_BTN = { x: 58, y: 30, r: 15 };
 
 function setup() {
-  cnv = createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight);
   textFont('monospace');
   // o editor do p5 não carrega nosso style.css → garante tela cheia sem barras
   document.body.style.margin = '0';
