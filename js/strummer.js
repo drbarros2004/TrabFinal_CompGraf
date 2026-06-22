@@ -7,7 +7,7 @@ const Strummer = {
     if (!activeChord) return;
 
     const mX = lx(mouseX),  mY = ly(mouseY);
-    const pX = lx(pmouseX), pY = ly(pmouseY);
+    const pY = ly(pmouseY);
 
     const inst = mouseIsPressed ? abs(mY - pY) / max(deltaTime, 1) : 0;
     this.strumSpeed = lerp(this.strumSpeed, inst, STRUM_DYNAMICS.smoothing);
