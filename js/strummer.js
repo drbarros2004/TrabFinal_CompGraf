@@ -1,7 +1,7 @@
 // ─── Strummer — detecção de cruzamento mouse × corda ────────────────────────
 const Strummer = {
   _lastTrigger: new Array(6).fill(0),
-  _speed: 0,   // velocidade vertical suavizada do ponteiro (px/ms)
+  strumSpeed: 0,   // velocidade vertical suavizada do ponteiro (px/ms)
 
   update(strings, activeChord) {
     if (!activeChord) return;  // roda custom vazia
@@ -13,7 +13,7 @@ const Strummer = {
     // Velocidade vertical suavizada, em px/ms (independente de framerate).
     // Decai para 0 quando o mouse não está pressionado.
     const inst = mouseIsPressed ? abs(mY - pY) / max(deltaTime, 1) : 0;
-    this._speed = lerp(this._speed, inst, STRUM_DYNAMICS.smoothing);
+    this.strumSpeed = lerp(this.strumSpeed, inst, STRUM_DYNAMICS.smoothing);
 
     for (let i = 0; i < 6; i++) {
       const y   = activeView.stringY(i);
@@ -47,8 +47,8 @@ const Strummer = {
   // Mapeia a velocidade suavizada do ponteiro para intensidade 0..1,
   // com piso audível e curva perceptual que separa batidas fracas de fortes.
   _strumVelocity() {
-    const d = STRUM_DYNAMICS;
-    const raw = constrain((this._speed - d.slowSpeed) / (d.fastSpeed - d.slowSpeed), 0, 1);
-    return d.minVel + (1 - d.minVel) * pow(raw, d.curve);
+    const d       = STRUM_DYNAMICS;
+    const clamped = constrain((this.strumSpeed - d.slowSpeed) / (d.fastSpeed - d.slowSpeed), 0, 1);
+    return d.minVel + (1 - d.minVel) * pow(clamped, d.curve);
   },
 };
