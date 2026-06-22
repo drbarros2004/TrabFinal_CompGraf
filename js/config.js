@@ -31,14 +31,14 @@ function stringY(i) {
 const STRING_WIDTHS = [3.5, 2.8, 2.2, 1.6, 1.2, 0.9];
 
 // ─── Física da onda estacionária ────────────────────────────────────────────
-// lambda = taxa de amortecimento; omega = freq. visual de oscilação
+// decayRate = taxa de amortecimento; oscFreq = freq. visual de oscilação
 const STRING_PHYSICS = [
-  { lambda: 2.5, omega: 8  },   // corda 6 (E2) — mais lenta/grossa
-  { lambda: 2.8, omega: 9  },   // corda 5 (A2)
-  { lambda: 3.2, omega: 11 },   // corda 4 (D3)
-  { lambda: 3.6, omega: 13 },   // corda 3 (G3)
-  { lambda: 4.0, omega: 15 },   // corda 2 (B3)
-  { lambda: 4.5, omega: 18 },   // corda 1 (E4) — mais rápida/fina
+  { decayRate: 2.5, oscFreq: 8  },   // corda 6 (E2) — mais lenta/grossa
+  { decayRate: 2.8, oscFreq: 9  },   // corda 5 (A2)
+  { decayRate: 3.2, oscFreq: 11 },   // corda 4 (D3)
+  { decayRate: 3.6, oscFreq: 13 },   // corda 3 (G3)
+  { decayRate: 4.0, oscFreq: 15 },   // corda 2 (B3)
+  { decayRate: 4.5, oscFreq: 18 },   // corda 1 (E4) — mais rápida/fina
 ];
 
 const STRING_VERTICES = 60;           // nº de vértices internos p/ suavidade
