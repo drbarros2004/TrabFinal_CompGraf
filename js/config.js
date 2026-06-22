@@ -45,10 +45,18 @@ const STRING_VERTICES = 60;           // nº de vértices internos p/ suavidade
 const AMPLITUDE_REST_THRESHOLD = 0.5; // px abaixo do qual a corda "repousa"
 const STRUM_COOLDOWN_MS = 70;         // ms mínimos entre dois toques na mesma corda
 
+// Dinâmica do strum: velocidade vertical do ponteiro (px/ms) → intensidade 0..1.
+// Valores iniciais para ajuste fino durante o teste.
+const STRUM_DYNAMICS = {
+  slowSpeed: 0.4,   // px/ms → intensidade mínima
+  fastSpeed: 3.0,   // px/ms → intensidade máxima
+  minVel:    0.08,  // piso audível para batida bem suave
+  curve:     1.8,   // expoente perceptual (>1 = mais contraste fraco↔forte)
+  smoothing: 0.5,   // suavização da velocidade do ponteiro (EMA, 0..1)
+};
+
 // ─── Áudio ─────────────────────────────────────────────────────────────────
 const AUDIO = {
-  minDb: -12,    // volume mínimo (movimento lento)
-  maxDb:  -8,     // volume máximo (movimento rápido)
   releaseSec: 2, // fade ao trocar de acorde: dissipa em vez de cortar seco
 };
 
