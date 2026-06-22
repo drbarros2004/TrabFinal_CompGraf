@@ -23,12 +23,12 @@ function windowResized() {
 
 // Encaixe do design lógico (CANVAS_W×CANVAS_H) na janela, preservando proporção.
 function _fit() {
-  const s = Math.min(width / CANVAS_W, height / CANVAS_H);
-  return { s, x: (width - CANVAS_W * s) / 2, y: (height - CANVAS_H * s) / 2 };
+  const scale = Math.min(width / CANVAS_W, height / CANVAS_H);
+  return { scale, offsetX: (width - CANVAS_W * scale) / 2, offsetY: (height - CANVAS_H * scale) / 2 };
 }
 // Mapeia o mouse (px da janela) para as coordenadas lógicas do design.
-function lx(px) { const f = _fit(); return (px - f.x) / f.s; }
-function ly(py) { const f = _fit(); return (py - f.y) / f.s; }
+function lx(px) { const f = _fit(); return (px - f.offsetX) / f.scale; }
+function ly(py) { const f = _fit(); return (py - f.offsetY) / f.scale; }
 
 function draw() {
   // re-encaixa se a janela do editor mudou de tamanho (ou só assentou após o load)
@@ -43,8 +43,8 @@ function draw() {
   // Encaixa o design lógico na janela (escala + centraliza, proporção mantida)
   const f = _fit();
   push();
-  translate(f.x, f.y);
-  scale(f.s);
+  translate(f.offsetX, f.offsetY);
+  scale(f.scale);
 
   // 2. Desenhar o cenário da view ativa (braço simples OU violão inteiro)
   activeView.drawBackground();
