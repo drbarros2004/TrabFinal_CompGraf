@@ -23,42 +23,57 @@ class GuitarString {
     }
   }
 
+  stringColor(fret, elapsed) {
+    if (!this.isRinging) {
+      const muted = fret < 0 && !activeView.showStringMarks;
+      return muted ? color(...COLORS.stringMuted) : color(...COLORS.string);
+    }
+    const flashAmt = constrain(elapsed / 0.08, 0, 1);
+    return lerpColor(color(255, 255, 240), color(...COLORS.stringActive), flashAmt);
+  }
+
+  waveVertices(xStart, x1, elapsed) {
+    const y   = activeView.stringY(this.index);
+    const amp = this.amplitude * activeView.ampScale;
+    const L   = x1 - xStart;
+    const pts = [];
+    // onda estacionária: sin(πx/L) × e^(-decayRate·t) × cos(oscFreq·t)
+    for (let n = 0; n <= STRING_VERTICES; n++) {
+      const x      = xStart + (n / STRING_VERTICES) * L;
+      const offset = amp
+        * sin(PI * (x - xStart) / L)
+        * exp(-this.decayRate * elapsed)
+        * cos(this.oscFreq * elapsed);
+      pts.push([x, y + offset]);
+    }
+    return pts;
+  }
+
   draw(fret = 0) {
-    const y      = activeView.stringY(this.index);
-    const x0     = activeView.stringX0;
-    const x1     = activeView.stringX1;
-    const xStart = fret > 0 ? activeView.fretX(fret - 0.5) : x0;
+    const y       = activeView.stringY(this.index);
+    const x0      = activeView.stringX0;
+    const x1      = activeView.stringX1;
+    const xStart  = fret > 0 ? activeView.fretX(fret - 0.5) : x0;
+    const elapsed = this.isRinging ? (millis() - this.pluckTime) / 1000 : 0;
 
     strokeWeight(STRING_WIDTHS[this.index]);
 
     if (!this.isRinging) {
-      const muted = fret < 0 && !activeView.showStringMarks;
-      stroke(...(muted ? COLORS.stringMuted : COLORS.string));
+      stroke(this.stringColor(fret, elapsed));
       line(x0, y, x1, y);
       return;
     }
-
-    const elapsed    = (millis() - this.pluckTime) / 1000;
-    const amp        = this.amplitude * activeView.ampScale;
-    const flashAmt   = constrain(elapsed / 0.08, 0, 1);
-    const flashColor = lerpColor(color(255, 255, 240), color(...COLORS.stringActive), flashAmt);
 
     if (xStart > x0) {
       stroke(...COLORS.string);
       line(x0, y, xStart, y);
     }
 
-    const Lvib = x1 - xStart;
-    stroke(flashColor);
+    stroke(this.stringColor(fret, elapsed));
     noFill();
     beginShape();
-    for (let n = 0; n <= STRING_VERTICES; n++) {
-      const x      = xStart + (n / STRING_VERTICES) * Lvib;
-      const offset = amp
-        * sin(PI * (x - xStart) / Lvib)
-        * exp(-this.decayRate * elapsed)
-        * cos(this.oscFreq * elapsed);
-      vertex(x, y + offset);
+    for (const [vx, vy] of this.waveVertices(xStart, x1, elapsed)) {
+      vertex(vx, vy);
     }
     endShape();
   }
