@@ -30,45 +30,44 @@ function _fit() {
 function lx(px) { const f = _fit(); return (px - f.offsetX) / f.scale; }
 function ly(py) { const f = _fit(); return (py - f.offsetY) / f.scale; }
 
-function draw() {
-  // re-encaixa se a janela do editor mudou de tamanho (ou só assentou após o load)
+function syncCanvas() {
   if (width !== windowWidth || height !== windowHeight) {
     resizeCanvas(windowWidth, windowHeight);
   }
-  background(...COLORS.bg);   // preenche a janela inteira (sem borda)
+}
 
-  // 1. Detectar strums (só quando o card de ajuda está fechado)
-  if (!helpOpen) Strummer.update(strings, menu.getActiveChord());
+function applyViewTransform() {
+  const { scale, offsetX, offsetY } = _fit();
+  translate(offsetX, offsetY);
+  scale(scale);
+}
 
-  // Encaixa o design lógico na janela (escala + centraliza, proporção mantida)
-  const f = _fit();
-  push();
-  translate(f.offsetX, f.offsetY);
-  scale(f.scale);
-
-  // 2. Desenhar o cenário da view ativa (braço simples OU violão inteiro)
-  activeView.drawBackground();
-
-  // 3. Desenhar cada corda
+function updateAndDrawStrings() {
   const frets = menu.getActiveFingering();
   for (let i = 0; i < strings.length; i++) {
     strings[i].update();
     strings[i].draw(frets ? frets[i] : 0);
   }
+}
 
-  // 3.5. Dedilhado do acorde ativo
-  _drawFingering();
-
-  // 4. Menu radial
-  menu.draw();
-
-  // 5. HUD / dicas
-  _drawHUD();
-
-  // 6. Ajuda
+function drawHelpUI() {
   _drawHelpButton();
   if (helpOpen) _drawHelpCard();
+}
 
+function draw() {
+  syncCanvas();
+  background(...COLORS.bg);
+  if (!helpOpen) Strummer.update(strings, menu.getActiveChord());
+
+  push();
+  applyViewTransform();
+  activeView.drawBackground();
+  updateAndDrawStrings();
+  _drawFingering();
+  menu.draw();
+  _drawHUD();
+  drawHelpUI();
   pop();
 }
 
