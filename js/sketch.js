@@ -87,7 +87,7 @@ function keyPressed() {
   if (key === 'v' || key === 'V') {
     activeView = (activeView === VIEWS.braco) ? VIEWS.violao : VIEWS.braco;
   }
-  if (key >= '1' && key <= '6') menu.selectWheel(int(key));
+  if (key >= '1' && key <= '6') menu.selectChord(int(key));
 
   // Troca de acorde: silencia só as notas que mudaram
   AudioEngine.reconcile(menu.getActiveFingering());
@@ -197,7 +197,7 @@ function _drawHUD() {
     text("Carregando samples de áudio...", NECK.xStart, CANVAS_H - 14);
   } else {
     fill(...COLORS.hint);
-    text("?: ajuda   |   ← →: acorde   |   ↑ ↓ / 1-6: roda   |   V: braço/violão   |   arraste nas cordas: tocar",
+    text("?: ajuda   |   ← → / 1-6: acorde   |   ↑ ↓: roda   |   V: braço/violão   |   arraste nas cordas: tocar",
          NECK.xStart, CANVAS_H - 14);
   }
   pop();
@@ -255,8 +255,8 @@ function _drawHelpCard() {
   text("COMO JOGAR", tx, ty); ty += 24;
   fill(...COLORS.menuText); textSize(14);
   const lh = 28;
-  text("← →            trocar de acorde", tx, ty); ty += lh;
-  text("↑ ↓  ou  1-6    trocar de campo (roda)", tx, ty); ty += lh;
+  text("← →  ou  1-6    trocar de acorde", tx, ty); ty += lh;
+  text("↑ ↓              trocar de campo (roda)", tx, ty); ty += lh;
   text("V               alterna braço / violão", tx, ty); ty += lh;
   text("arraste o mouse sobre as cordas para tocar", tx, ty);
 
