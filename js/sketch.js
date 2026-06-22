@@ -1,12 +1,11 @@
 // ─── sketch.js — orquestração principal ─────────────────────────────────────
 let strings   = [];
 let menu;
-let cnv;
 let helpOpen = false;
 const HELP_BTN = { x: 58, y: 30, r: 15 };
 
 function setup() {
-  cnv = createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight);
   textFont('monospace');
   // o editor do p5 não carrega nosso style.css → garante tela cheia sem barras
   document.body.style.margin = '0';
@@ -24,52 +23,51 @@ function windowResized() {
 
 // Encaixe do design lógico (CANVAS_W×CANVAS_H) na janela, preservando proporção.
 function _fit() {
-  const s = Math.min(width / CANVAS_W, height / CANVAS_H);
-  return { s, x: (width - CANVAS_W * s) / 2, y: (height - CANVAS_H * s) / 2 };
+  const scale = Math.min(width / CANVAS_W, height / CANVAS_H);
+  return { scale, offsetX: (width - CANVAS_W * scale) / 2, offsetY: (height - CANVAS_H * scale) / 2 };
 }
 // Mapeia o mouse (px da janela) para as coordenadas lógicas do design.
-function lx(px) { const f = _fit(); return (px - f.x) / f.s; }
-function ly(py) { const f = _fit(); return (py - f.y) / f.s; }
+function lx(px) { const f = _fit(); return (px - f.offsetX) / f.scale; }
+function ly(py) { const f = _fit(); return (py - f.offsetY) / f.scale; }
 
-function draw() {
-  // re-encaixa se a janela do editor mudou de tamanho (ou só assentou após o load)
+function syncCanvas() {
   if (width !== windowWidth || height !== windowHeight) {
     resizeCanvas(windowWidth, windowHeight);
   }
-  background(...COLORS.bg);   // preenche a janela inteira (sem borda)
+}
 
-  // 1. Detectar strums (só quando o card de ajuda está fechado)
-  if (!helpOpen) Strummer.update(strings, menu.getActiveChord());
-
-  // Encaixa o design lógico na janela (escala + centraliza, proporção mantida)
+function applyViewTransform() {
   const f = _fit();
-  push();
-  translate(f.x, f.y);
-  scale(f.s);
+  translate(f.offsetX, f.offsetY);
+  scale(f.scale);
+}
 
-  // 2. Desenhar o cenário da view ativa (braço simples OU violão inteiro)
-  activeView.drawBackground();
-
-  // 3. Desenhar cada corda
+function updateAndDrawStrings() {
   const frets = menu.getActiveFingering();
   for (let i = 0; i < strings.length; i++) {
     strings[i].update();
     strings[i].draw(frets ? frets[i] : 0);
   }
+}
 
-  // 3.5. Dedilhado do acorde ativo
-  _drawFingering();
-
-  // 4. Menu radial
-  menu.draw();
-
-  // 5. HUD / dicas
-  _drawHUD();
-
-  // 6. Ajuda
+function drawHelpUI() {
   _drawHelpButton();
   if (helpOpen) _drawHelpCard();
+}
 
+function draw() {
+  syncCanvas();
+  background(...COLORS.bg);
+  if (!helpOpen) Strummer.update(strings, menu.getActiveChord());
+
+  push();
+  applyViewTransform();
+  activeView.drawBackground();
+  updateAndDrawStrings();
+  _drawFingering();
+  menu.draw();
+  _drawHUD();
+  drawHelpUI();
   pop();
 }
 
@@ -89,7 +87,7 @@ function keyPressed() {
   if (key === 'v' || key === 'V') {
     activeView = (activeView === VIEWS.braco) ? VIEWS.violao : VIEWS.braco;
   }
-  if (key >= '1' && key <= '6') menu.selectWheel(int(key));
+  if (key >= '1' && key <= '6') menu.selectChord(int(key));
 
   // Troca de acorde: silencia só as notas que mudaram
   AudioEngine.reconcile(menu.getActiveFingering());
@@ -199,7 +197,7 @@ function _drawHUD() {
     text("Carregando samples de áudio...", NECK.xStart, CANVAS_H - 14);
   } else {
     fill(...COLORS.hint);
-    text("?: ajuda   |   ← →: acorde   |   ↑ ↓ / 1-6: roda   |   V: braço/violão   |   arraste nas cordas: tocar",
+    text("?: ajuda   |   ← → / 1-6: acorde   |   ↑ ↓: roda   |   V: braço/violão   |   arraste nas cordas: tocar",
          NECK.xStart, CANVAS_H - 14);
   }
   pop();
@@ -257,8 +255,8 @@ function _drawHelpCard() {
   text("COMO JOGAR", tx, ty); ty += 24;
   fill(...COLORS.menuText); textSize(14);
   const lh = 28;
-  text("← →            trocar de acorde", tx, ty); ty += lh;
-  text("↑ ↓  ou  1-6    trocar de campo (roda)", tx, ty); ty += lh;
+  text("← →  ou  1-6    trocar de acorde", tx, ty); ty += lh;
+  text("↑ ↓              trocar de campo (roda)", tx, ty); ty += lh;
   text("V               alterna braço / violão", tx, ty); ty += lh;
   text("arraste o mouse sobre as cordas para tocar", tx, ty);
 

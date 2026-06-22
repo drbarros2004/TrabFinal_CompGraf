@@ -33,6 +33,11 @@ class RadialMenu {
     if (n >= 1 && n <= WHEELS.length) this.wheelIndex = n - 1;
   }
 
+  selectChord(n) {                   // teclas 1..6 : acorde direto na roda ativa
+    const w = this.getActiveWheel();
+    if (n >= 1 && n <= w.chords.length) this.chordIndex[this.wheelIndex] = n - 1;
+  }
+
 
   draw() {
     const { cx, cy, r, dotR } = activeView.menuPos;
