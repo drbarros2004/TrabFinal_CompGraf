@@ -37,9 +37,9 @@ function syncCanvas() {
 }
 
 function applyViewTransform() {
-  const { scale, offsetX, offsetY } = _fit();
-  translate(offsetX, offsetY);
-  scale(scale);
+  const f = _fit();
+  translate(f.offsetX, f.offsetY);
+  scale(f.scale);
 }
 
 function updateAndDrawStrings() {
