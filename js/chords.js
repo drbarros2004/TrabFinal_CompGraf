@@ -89,11 +89,11 @@ const WHEELS = [
     id: "custom",
     chords: [
       { label: "D7M", fingering: [-1, -1, 0, 2, 2, 2] }, // topo
-      { label: "?", fingering: PLACEHOLDER }, // cima-direita
-      { label: "?", fingering: PLACEHOLDER }, // baixo-direita
-      { label: "?", fingering: PLACEHOLDER }, // base
-      { label: "?", fingering: PLACEHOLDER }, // baixo-esquerda
-      { label: "?", fingering: PLACEHOLDER }, // cima-esquerda
+      { label: "C7", fingering: [-1, 3, 2, 3, 1, 0] }, // cima-direita
+      { label: "A7", fingering: [-1, 0, 2, 0, 2, 0] }, // baixo-direita
+      { label: "Em7", fingering: [0, 2, 2, 0, 3, 3] }, // base
+      { label: "Bm7", fingering: [-1, 2, 4, 2, 3, 2] }, // baixo-esquerda
+      { label: "F7M", fingering: [1, 3, 3, 2, 1, 0] }, // cima-esquerda
     ],
   },
 ];
