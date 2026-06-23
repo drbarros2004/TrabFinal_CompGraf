@@ -3,6 +3,8 @@ const AudioEngine = {
   _ready:        false,
   _initializing: false,
   _sampler:      null,
+  _gain:         null,
+  _limiter:      null,
   _ringing:      new Array(6).fill(null),
 
   async init() {
@@ -10,6 +12,10 @@ const AudioEngine = {
     this._initializing = true;
     try {
       await Tone.start();
+      // Barramento master: sampler → gain (headroom) → limiter → saída.
+      // Sem isto, 6 vozes perto de velocity=1 somam acima de 0 dBFS e estouram.
+      this._limiter = new Tone.Limiter(AUDIO.limiterDb).toDestination();
+      this._gain    = new Tone.Gain(AUDIO.masterGain).connect(this._limiter);
       this._sampler = new Tone.Sampler({
         urls: {
           E2: "E2.mp3",
@@ -25,7 +31,7 @@ const AudioEngine = {
           this._ready = true;
           console.log("[AudioEngine] Sampler pronto — guitar-acoustic");
         },
-      }).toDestination();
+      }).connect(this._gain);
     } catch (e) {
       this._sampler = null;
       console.warn("[AudioEngine] falha ao inicializar Tone.js:", e);

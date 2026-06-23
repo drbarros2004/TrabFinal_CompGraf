@@ -50,14 +50,16 @@ const STRUM_COOLDOWN_MS = 70;         // ms mínimos entre dois toques na mesma 
 const STRUM_DYNAMICS = {
   slowSpeed: 0.4,   // px/ms → intensidade mínima
   fastSpeed: 3.0,   // px/ms → intensidade máxima
-  minVel:    0.08,  // piso audível para batida bem suave
+  minVel:    0.12,  // piso audível para batida bem suave
   curve:     1.8,   // expoente perceptual (>1 = mais contraste fraco↔forte)
   smoothing: 0.5,   // suavização da velocidade do ponteiro (EMA, 0..1)
 };
 
 // ─── Áudio ─────────────────────────────────────────────────────────────────
 const AUDIO = {
-  releaseSec: 2, // fade ao trocar de acorde: dissipa em vez de cortar seco
+  releaseSec:  2,    // fade ao trocar de acorde: dissipa em vez de cortar seco
+  masterGain:  0.5,  // headroom no master (~-6 dB): evita clipping ao somar 6 vozes
+  limiterDb:  -1,    // teto brickwall (dBFS) p/ picos quando os ataques se empilham
 };
 
 // ─── Menu radial ────────────────────────────────────────────────────────────
