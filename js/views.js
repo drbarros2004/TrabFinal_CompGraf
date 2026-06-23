@@ -1,5 +1,4 @@
 // ─── Views — geometria parametrizada por modo de visualização ────────────────
-// Contrato: ver docs/superpowers/plans/2026-06-18-vista-grafica-violao.md
 
 // Geometria do modo "violão completo" (zoom A: boca inteira visível, span ~60px)
 const VIOLAO_GEO = {
